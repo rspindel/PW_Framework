@@ -1,0 +1,50 @@
+/* structure */
+.pw-form ol,
+.pw-form ul { margin:0; }
+.pw-form li { margin:0; overflow:hidden; padding:0; }
+.pw-form p { margin-bottom:13px;}
+.pw-form p.desc { color:#666; font-size:11px; font-style:italic; }
+.pw-form .form { background-color:#fff; margin:20px; padding:20px; width:660px; }
+.pw-form .label { float:left; line-height:1.4em; padding:10px; width:200px;}
+.pw-form .field { font-size:11px; line-height:20px; padding:8px 10px 8px 230px; }
+
+.pw-form .label.full { float:none; width:auto; }
+.pw-form .field.full { clear:left; padding-left:0; }
+.pw-form .field li, .field p { margin-bottom:5px; }
+.pw-form .field ol.inline li { display:inline; }
+.pw-form .field ol.columns li { display:inline-block; width:30%; }	
+.pw-form .controls { border-top:1px solid #333; padding-top:10px;}
+.pw-form .controls input.right { float:right; }
+
+/* text/fonts */
+.pw-form { color:#222; margin-top: 0.5em; }
+.pw-form .label { font-size:13px; }
+
+.pw-form input[type="text"],
+.pw-form input[type="password"],
+.pw-form textarea { }
+.pw-form em { color:#c00; font-weight:bold; }
+
+/* fields */
+.pw-form input[type="text"],
+.pw-form input[type="password"],
+.pw-form textarea { width:25em; }
+.pw-form input.full[type="text"],
+.pw-form input.full[type="password"],
+.pw-form textarea, .full input[type="text"],
+.pw-form .full input[type="password"],
+.pw-form .full textarea { width:100%; }
+.pw-form input.small[type="text"],
+.pw-form input.small[type="password"] { width:105px; }
+.pw-form input.tiny[type="text"],
+.pw-form input.tiny[type="password"] { width:36px; }
+.pw-form input,
+.pw-form select { margin-right:3px; }
+.pw-form input+label,
+.pw-form select+label { margin-left:3px; }
+
+/* errors */
+.pw-form .pw-error input[type="text"],
+.pw-form .pw-error input[type="password"],
+.pw-form .pw-error textarea { background-color:#fff8f8; border-color:#c00; }
+.pw-error-message { color:#c00; line-height:1.2; padding:3px 0 0 1px; }

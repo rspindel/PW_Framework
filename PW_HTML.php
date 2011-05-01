@@ -36,20 +36,23 @@ class PW_HTML
 		$name = tag_escape($name);
 		
 		$output = "<$name";
-		foreach($atts as $property=>$value)
-		{
-			// convert all attribute names to lowecase and remove non-letter characters
-			$property = preg_replace('/[^a-z]/', '', strtolower($property));
+		
+		if ( is_array($atts) ) {
+			foreach( $atts as $property=>$value)
+			{
+				// convert all attribute names to lowecase and remove non-letter characters
+				$property = preg_replace('/[^a-z]/', '', strtolower($property));
 			
-			// esc_url if the attribute type is: cite, codebase, href, src
-			if (in_array($property, array('cite', 'codebase', 'href', 'src'))) {
-				$value = esc_url($value);
+				// esc_url if the attribute type is: cite, codebase, href, src
+				if (in_array($property, array('cite', 'codebase', 'href', 'src'))) {
+					$value = esc_url($value);
+				}
+			
+				// escape the attribute values
+				$value = esc_attr($value);
+			
+				$output .= " {$property}=\"{$value}\"";
 			}
-			
-			// escape the attribute values
-			$value = esc_attr($value);
-			
-			$output .= " {$property}=\"{$value}\"";
 		}
 		$output .= ($text !== null) ? ">$text</$name>" : " />";
 		return $output;
@@ -60,25 +63,22 @@ class PW_HTML
 	 * Creates and returns the output for a checkbox.
 	 * Optionally creates a hidden input field which represents the default if the box is left unchecked
 	 * @param string $name The name attribute	
-	 * @param string $value The value attribute
 	 * @param bool $selected Whether or not the checkbox should be selected
 	 * @param array $atts @see self::tag() for details
 	 * @param string $unchecked_value An optional default value in case the box is left unchecked
 	 * @return string The generated HTML markup
 	 * @since 1.0
 	 */
-	public static function checkbox( $name, $value, $selected, $atts=array(), $unchecked_value=null )
+	public static function checkbox( $name, $selected, $atts=array(), $unchecked_value=null )
 	{	
 		$atts['name'] = $name;
 		$atts['type'] = 'checkbox';
-		$atts['value'] = $value;
+		$atts['value'] = isset($atts['value']) ? $atts['value'] : "1";
 		if ($selected) {
 			$atts['checked'] = 'checked';
-		} else if (isset($atts['checked'])) {
-			unset($atts['checked']);
 		}
-		$output = $unchecked_value ? self::tag('input', array('type'=>'hidden', 'value'=>$unchecked_value, 'name'=>$name)) : "";
-		$output .= self::tag('input', $atts, null);
+		$output = $unchecked_value ? self::tag('input', null, array('type'=>'hidden', 'value'=>$unchecked_value, 'name'=>$name)) : "";
+		$output .= self::tag('input', null, $atts);
 		return $output;
 	}
 	
@@ -188,12 +188,13 @@ class PW_HTML
 		$atts['name'] = $name;
 		$atts['type'] = 'radio';
 		$item_index = 0;
+		
 		foreach($items as $item_value=>$item_label)
 		{
 			$item_atts = $atts;
 			$item_atts['id'] = $label_atts['for'] = self::get_id_from_name($name) . '_' . $item_index++;
 			$item_atts['value'] = $item_value;
-			if ( $selected == $item_value ) {				
+			if ( $selected === $item_value ) {				
 				$item_atts['checked'] = 'checked';
 			}
 			$temp_items[] = str_replace(
@@ -222,7 +223,7 @@ class PW_HTML
 		$text = '';
 		foreach($items as $item_value=>$item_text) {
 			$item_atts = array('value'=>$item_value);
-			if ( $selected == $item_value ) {
+			if ( $selected === $item_value ) {
 				$item_atts['selected'] = 'selected';
 			}
 			$text .= self::tag('option', $item_text, $item_atts);

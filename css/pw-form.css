@@ -28,7 +28,7 @@
 /* fields */
 .pw-form input[type="text"],
 .pw-form input[type="password"],
-.pw-form textarea { width:25em; }
+.pw-form textarea { }
 .pw-form input.full[type="text"],
 .pw-form input.full[type="password"],
 .pw-form textarea, .full input[type="text"],

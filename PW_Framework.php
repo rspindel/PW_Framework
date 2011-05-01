@@ -14,8 +14,9 @@ class PW_Framework
 	 */
 	public static $files = array(
 		'PW_Controller' => 'PW_Controller.php',
-		'PW_Form' => 'PW_Form.php',
 		'PW_HTML' => 'PW_HTML.php',
+		'PW_Form' => 'PW_Form.php',
+		'PW_Settings_Form' => 'PW_Settings_Form.php',
 		'PW_Model' => 'PW_Model.php',
 		'PW_Validator' => 'PW_Validator.php',
 		'PW_Zen_Coder' => 'PW_Zen_Coder.php',		

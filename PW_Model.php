@@ -214,15 +214,44 @@ class PW_Model
 	
 	
 	/**
-	 * Returns an array specifying the default option attributes (the array keys) and the
-	 * default option attribute values (the array values)
-	 * @return array The default attributes and values
+	 * Returns an array specifying the default option property values
+	 * @return array The default property values (ex: array( $property => $value ))
 	 * @since 1.0
 	 */
 	protected function defaults()
 	{
 		return array();
 	}
+	
+	
+	/**
+	 * Returns an array specifying the various labels and descriptions associated with each property
+	 * HTML characters are allowed within the label and description string in case you want to get
+	 * more complex, but make sure you check with the PW_Settings_Form::template() so your
+	 * markup doesn't clash
+	 * @return array The property labels
+	 * @since 1.0
+	 */
+	protected function labels()
+	{
+		/* Override like this:
+		return array(
+			'prop1' => array(
+				'label' => 'Prop1 Label',
+				'desc' => 'This is a description of Prop1',
+			),
+			'prop2' => array(
+				'label' => 'Prop2 Label',
+			),
+			'prop3' => array(
+				'desc' => 'Prop3 only has a description',
+			),
+
+		)
+		*/
+		return array();
+	}
+
 	
 	
 	/**

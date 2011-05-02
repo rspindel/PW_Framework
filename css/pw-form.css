@@ -42,6 +42,8 @@
 .pw-form select { margin-right:3px; }
 .pw-form input+label,
 .pw-form select+label { margin-left:3px; }
+/*.pw-form input.large-text+.description { color:#666; font-size:11px; font-style:normal; }*/
+
 
 /* errors */
 .pw-form .pw-error input[type="text"],

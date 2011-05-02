@@ -77,7 +77,7 @@ class PW_Model
 	
 	/**
 	 * PHP getter magic method.
-	 * This method is overridden so that option attributes can be accessed like properties.
+	 * This method is overridden so that option properties can be directly accessed
 	 * @param string $name The key in the option array
 	 * @return mixed property value
 	 * @see getAttribute
@@ -93,7 +93,7 @@ class PW_Model
 	
 	/**
 	 * PHP setter magic method.
-	 * This method is overridden so that option attributes can be accessed like properties.
+	 * This method is overridden so that option properties can be directly accessed
 	 * @param string $name The key in the option array
 	 * @param mixed $value The value to set
 	 */
@@ -161,6 +161,9 @@ class PW_Model
 			$this->_errors = array();
 			$this->_option = $option;
 			update_option( $this->_name, $option );
+			
+			// print_r($this->_option);
+			
 			return true;
 		} else {
 			return false;

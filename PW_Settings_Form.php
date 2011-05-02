@@ -14,8 +14,24 @@
 
 class PW_Settings_Form
 {
-	protected $_model;
+	// Don't worry about creating extra markup if {extra} or {error} is empty.
+	// All empty tags are removed before output.
+	public $template = 
+		'<li>
+			<div class="label">{label}</div>
+			<div class="field {error_class}">
+				{field}
+				<span class="description">{desc}</span>
+				<div class="extra">{extra}</div>
+				<div class="{error_class}">{error}</div>
+			</div>
+		</li>';
 
+	public $error_class = 'pw-error';
+
+
+	protected $_model;
+	
 	
 	public function __construct( $model = null )
 	{
@@ -24,6 +40,20 @@ class PW_Settings_Form
 
 	public function set_model( $model ) {
 		$this->_model = $model;
+	}
+	
+	public function render_field($label, $field, $desc, $extra, $error)
+	{	
+		$output = str_replace(
+			array('{label}','{field}','{desc}','{extra}','{error}', '{error_class}'),
+			array($label, $field, $desc, $extra, $error, $error ? $this->error_class : '' ),
+			$this->template
+		);
+		
+		// then remove any empty tags
+		$output = preg_replace('/<[^>\/]+><\/[^>]+>/', '', $output);
+
+		return $output;
 	}
 	
 	/**
@@ -35,18 +65,19 @@ class PW_Settings_Form
 	 * @since 1.0
 	 */
 	public function checkbox( $property, $atts=array(), $unchecked_value, $extra = '' )
-	{
-		$zc = new PW_Zen_Coder;
-		extract( $this->get_field_data_from_model($property) ); // return $error, $label, $name, $value, $id
+	{		
+		extract( $this->get_field_data_from_model($property) ); // returns $error, $label, $name, $value, $id
 		
-		// Whether or not the checked is checked
-		$selected = $this->_model->$property == $value;
+		// Make sure value is set (default to "1")
+		$atts['value'] = isset($atts['value']) ? $atts['value'] : "1";
 		
-		// create the label, value, end error (if one exists) elements		
-		$label = $zc->expand('div.label>label[for="' . $id . '"]', $label);
-		$value = $zc->expand('div.field' . ($error ? '.pw-error' : ''), PW_HTML::checkbox( $name, $selected, $atts, $unchecked_value) . $extra . $error );
+		// Determine if the checkbox should be selected
+		$selected = $value == $atts['value'];
 
-		return '<li>' . $label . $value . '</li>';		
+		$field = PW_HTML::checkbox( $name, $selected, $atts, $unchecked_value) . PW_HTML::label($desc, $id);
+		
+		// set the $desc value to '' because the checkbox is already using it for generate the label		
+		return $this->render_field($label, $field, '', $extra, $error);	
 	}
 	
 	/**
@@ -60,15 +91,26 @@ class PW_Settings_Form
 	 */
 	public function radio_button_list( $property, $items, $separator, $atts=array(), $extra = '' )
 	{
-		$zc = new PW_Zen_Coder;
-		extract( $this->get_field_data_from_model($property) ); // return $error, $label, $name, $value, $id
-		
-		// create the label, value, end error (if one exists) elements		
-		$label = $zc->expand('div.label>label[for="' . $id . '"]', $label);
-		$value = $zc->expand('div.field' . ($error ? '.pw-error' : ''), PW_HTML::radio_button_list( $name, $items, $value, $separator, $atts) . $error );
-
-		return '<li>' . $label . $value . '</li>';		
+		extract( $this->get_field_data_from_model($property) ); // returns $error, $label, $name, $value, $id
+		$field = PW_HTML::radio_button_list( $name, $items, $value, $separator, $atts);
+		return $this->render_field($label, $field, $desc, $extra, $error);
 	}
+	
+	
+	/**
+	 * Create a new section with title and optional description
+	 * @param string $title The section title
+	 * @param string $desc Optional description text to go below the title
+	 * @return string The generated HTML markup
+	 * @since 1.0
+	 */
+	public function section( $title, $desc = null )
+	{
+		$title = '<h3>' . $title . '</h3>';
+		$desc = $desc ? '<p>' . $desc . '</p>' : '';
+		return $title . $desc;
+	}
+	
 	
 	/**
 	 * @param string $property The model option property
@@ -80,14 +122,12 @@ class PW_Settings_Form
 	 */
 	public function select( $property, $items, $atts=array(), $extra = '' )
 	{
-		$zc = new PW_Zen_Coder;
-		extract( $this->get_field_data_from_model($property) ); // return $error, $label, $name, $value, $id
+		extract( $this->get_field_data_from_model($property) ); // returns $error, $label, $name, $value, $id
 		
-		// create the label, value, end error (if one exists) elements		
-		$label = $zc->expand('div.label>label[for="' . $id . '"]', $label);
-		$value = $zc->expand('div.field' . ($error ? '.pw-error' : ''), PW_HTML::select( $name, $items, $value, $atts) . $error );
-
-		return '<li>' . $label . $value . '</li>';		
+		$label = PW_HTML::label($label, $id);
+		$field = PW_HTML::select( $name, $items, $value, $atts);
+		
+		return $this->render_field($label, $field, $desc, $extra, $error);	
 	}
 	
 	
@@ -100,30 +140,31 @@ class PW_Settings_Form
 	 */
 	public function textfield( $property, $atts=array(), $extra = '' )
 	{
-		$zc = new PW_Zen_Coder;
-		extract( $this->get_field_data_from_model($property) ); // return $error, $label, $name, $value, $id
+		extract( $this->get_field_data_from_model($property) ); // returns $error, $label, $desc, $name, $value, $id
 		
-		// create the label, value, end error (if one exists) elements		
-		$label = $zc->expand('div.label>label[for="' . $id . '"]', $label);
-		$value = $zc->expand('div.field' . ($error ? '.pw-error' : ''), PW_HTML::textfield( $name, $value, $atts) . $error );
-
-		return '<li>' . $label . $value . '</li>';		
+		$label = PW_HTML::label($label, $id);
+		$field = PW_HTML::textfield( $name, $value, $atts);
+		
+		return $this->render_field($label, $field, $desc, $extra, $error);
 	}
 	
 	
 	/**
 	 * @param string $property The model option property
-	 * @return array An array of the property's id, name (the HTML attribute), label, value, and error (if one exists)
+	 * @return array An array of the property's id, name (the HTML attribute), label, desc, value, and error (if one exists)
 	 * @since 1.0
 	 */
 	protected function get_field_data_from_model( $property )
 	{	
+		$zc = new PW_Zen_Coder;
+				
 		$errors = $this->_model->get_errors();
 		$error = isset($errors[$property]) ? $zc->expand('div.pw-error-message', $errors[$property]) : null;
 		
-		// get the label of this property
+		// get the label and description of this property
 		$labels = $this->_model->labels();
-		$label = $labels[$property];
+		$label = isset($labels[$property]['label']) ? $labels[$property]['label'] : '';
+		$desc = isset($labels[$property]['desc']) ? $labels[$property]['desc'] : '';
 		
 		// get the value of the model attribute by this name
 		// if there was a validation error, get the previously submitted value
@@ -134,8 +175,8 @@ class PW_Settings_Form
 		$name = $this->_model->get_name() . '[' . $property . ']';
 		
 		// create the id from the name
-		$id = PW_HTML::get_id_from_name( $property );
+		$id = PW_HTML::get_id_from_name( $name );
 		
-		return array( 'error'=>$error, 'label'=>$label, 'value'=>$value, 'name'=>$name, 'id'=>$id );
+		return array( 'error'=>$error, 'label'=>$label, 'desc'=>$desc, 'value'=>$value, 'name'=>$name, 'id'=>$id );
 	}
 }

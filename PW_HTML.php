@@ -47,7 +47,7 @@ class PW_HTML
 				if (in_array($property, array('cite', 'codebase', 'href', 'src'))) {
 					$value = esc_url($value);
 				}
-			
+							
 				// escape the attribute values
 				$value = esc_attr($value);
 			
@@ -72,6 +72,7 @@ class PW_HTML
 	public static function checkbox( $name, $selected, $atts=array(), $unchecked_value=null )
 	{	
 		$atts['name'] = $name;
+		$atts['id'] = self::get_id_from_name($name);
 		$atts['type'] = 'checkbox';
 		$atts['value'] = isset($atts['value']) ? $atts['value'] : "1";
 		if ($selected) {
@@ -188,13 +189,14 @@ class PW_HTML
 		$atts['name'] = $name;
 		$atts['type'] = 'radio';
 		$item_index = 0;
-		
+				
 		foreach($items as $item_value=>$item_label)
 		{
 			$item_atts = $atts;
 			$item_atts['id'] = $label_atts['for'] = self::get_id_from_name($name) . '_' . $item_index++;
 			$item_atts['value'] = $item_value;
-			if ( $selected === $item_value ) {				
+			
+			if ( (string) $selected === (string) $item_value ) {	
 				$item_atts['checked'] = 'checked';
 			}
 			$temp_items[] = str_replace(
@@ -223,7 +225,7 @@ class PW_HTML
 		$text = '';
 		foreach($items as $item_value=>$item_text) {
 			$item_atts = array('value'=>$item_value);
-			if ( $selected === $item_value ) {
+			if ( (string) $selected === (string) $item_value ) {
 				$item_atts['selected'] = 'selected';
 			}
 			$text .= self::tag('option', $item_text, $item_atts);

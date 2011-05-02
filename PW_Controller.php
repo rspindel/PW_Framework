@@ -92,11 +92,14 @@ class PW_Controller
 		if ( isset($_POST[$model->get_name()]) ) {
 			
 			// get the options from $_POST
-			$model->input = $_POST[$model->get_name()];
+			$model->input = stripslashes_deep($_POST[$model->get_name()]);
 			
 			// save the options
 			$model->save($model->input);
 		}
+		
+		// var_dump($model);
+		
 		
 		// add action hook for admin pages
 		add_action( 'admin_init', array($this, 'on_admin_page') );

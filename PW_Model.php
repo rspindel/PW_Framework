@@ -223,33 +223,37 @@ class PW_Model
 	 */
 	protected function defaults()
 	{
-		return array();
+		$defaults = array();
+		$data = $this->data();
+		foreach($data as $property=>$value) {
+			$defaults[$property] = isset($value['default']) ? $value['default'] : '';
+		}
+		return $defaults;
 	}
 	
 	
 	/**
-	 * Returns an array specifying the various labels and descriptions associated with each property
-	 * HTML characters are allowed within the label and description string in case you want to get
-	 * more complex, but make sure you check with the PW_Settings_Form::template() so your
-	 * markup doesn't clash
+	 * Returns a multi-dimensional array of the label, description, and default value of each property
+	 * HTML characters are allowed within the label and description strings
 	 * @return array The property labels
 	 * @since 1.0
 	 */
-	protected function labels()
+	protected function data()
 	{
 		/* Override like this:
 		return array(
 			'prop1' => array(
 				'label' => 'Prop1 Label',
 				'desc' => 'This is a description of Prop1',
+				'default' => 'Foo',
 			),
 			'prop2' => array(
 				'label' => 'Prop2 Label',
+				'default' => 'Bar'
 			),
 			'prop3' => array(
 				'desc' => 'Prop3 only has a description',
 			),
-
 		)
 		*/
 		return array();

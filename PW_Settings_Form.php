@@ -79,6 +79,27 @@ class PW_Settings_Form
 		// set the $desc value to '' because the checkbox is already using it for generate the label		
 		return $this->render_field($label, $field, '', $extra, $error);	
 	}
+
+
+	/**
+	 * @param string $property The model option property
+	 * @param array $items A list of value=>label pairs representing each individual option elements
+	 * @param string $separator Markup to put between each radio button
+	 * @param array $atts @see PW_HTML::tag() for details
+	 * @param string $extra Any addition markup you want to display after the input element
+	 * @return string The generated HTML markup
+	 * @since 1.0
+	 */
+	public function checkbox_list( $property, $items, $separator, $atts=array(), $extra = '' )
+	{
+		extract( $this->get_field_data_from_model($property) ); // returns $error, $label, $name, $value, $id
+		$field = PW_HTML::checkbox_list( $name, $items, $value, $separator, $atts);
+		
+		echo esc_html($field);
+		
+		return $this->render_field($label, $field, $desc, $extra, $error);
+	}
+	
 	
 	/**
 	 * @param string $property The model option property
@@ -162,7 +183,7 @@ class PW_Settings_Form
 		$error = isset($errors[$property]) ? $zc->expand('div.pw-error-message', $errors[$property]) : null;
 		
 		// get the label and description of this property
-		$labels = $this->_model->labels();
+		$labels = $this->_model->data();
 		$label = isset($labels[$property]['label']) ? $labels[$property]['label'] : '';
 		$desc = isset($labels[$property]['desc']) ? $labels[$property]['desc'] : '';
 		

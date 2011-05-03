@@ -148,8 +148,15 @@ class PW_Model
 				// set the input to null if no value was passed but a validation rules was set
 				// this will allow for an error in a situation where someone used firebug to delete HTML dynamically
 				$input = isset($option[$property]) ? $option[$property] : null;
-				$args = isset($rule['args']) ? $rule['args'] : null;
-				if ( $error = call_user_func( $rule['validator'], $input, $args) ) {
+				
+				// create an array of values from the rule definition to pass as method arguments to the callback function
+				$args = $rule;
+				array_unshift($args, $input);
+				unset($args['properties']);
+				unset($args['validator']);
+				unset($args['message']);
+				
+				if ( $error = call_user_func_array( $rule['validator'], $args) ) {
 					$message = isset($rule['message']) ? $rule['message'] : $error;
 					$message = str_replace("{property}", $this->get_label($property), $message);
 					$this->add_error( $property, $message );
@@ -300,7 +307,7 @@ class PW_Model
 	 * 1) 'properties' => a comma separated list of option property names
 	 * 2) 'validator' => a php callback function that returns true if valid and false or an error message if invalid
 	 * 3) 'message' => (optional) a custom message to override the default one (use {property} to refer to that property's label value)
-	 * 4) 'args' => (optional) an array of any additional data to be passed to the callback function
+	 * 4) '...' => (optional) Addition key-value pairs that will be passed to the callback function (order matters!)
 	 * @return array The validation rules
 	 * @since 1.0
 	 */
@@ -312,10 +319,10 @@ class PW_Model
 				'properties' => 'order,year_count,year_format',
 			 	'validator'=> array('PW_Validator', 'match')
 				'message' => 'There is an error on field {property}.'
-				'args' => array( 'patter' => '/[1-9]{2,4}/ ),
+				'pattern' => '/[1-9]{2,4}/',
 			),
 			array(
-				'attributes' => 'email',
+				'properties' => 'email',
 				'validator'=> array('PW_Validator', 'email')
 			),			
 		);

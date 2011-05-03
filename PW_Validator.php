@@ -14,11 +14,10 @@ class PW_Validator
 	/**
 	 * Returns an error message if email is invalid, otherwise returns nothing
 	 * @param sring $input The value to validate
-	 * @param array $args Optional values specified in the rules() declaration
 	 * @return string (only if invalid)
 	 * @since 1.0
 	 */
-	public static function email( $input, $args = null )
+	public static function email( $input )
 	{
 		/**
 		 * The regular expression used to validate the attribute value.
@@ -33,13 +32,29 @@ class PW_Validator
 	/**
 	 * Returns an error message if $input doesn't match the passed regular expression
 	 * 
-	 * @param sring $input The value to validate
+	 * @param string $input The value to validate
+	 * @param array $haystack And array that must contain the value $input
 	 * @return string (only if invalid)
 	 * @since 1.0
 	 */
-	public static function match( $input, $args = null )
+	public static function in_array( $input, $haystack )
 	{
-		if ( isset($args['pattern']) && !preg_match($args['pattern'], $input) ) {
+		if ( !in_array($input, $haystack) ) {
+			return 'Invalid value for {property}';
+		}
+	}
+	
+	/**
+	 * Returns an error message if $input doesn't match the passed regular expression
+	 * 
+	 * @param string $input The value to validate
+	 * @param array $pattern The regulat expression the input should match
+	 * @return string (only if invalid)
+	 * @since 1.0
+	 */
+	public static function match( $input, $pattern )
+	{
+		if ( $pattern && !preg_match($pattern, $input) ) {
 			return 'Invalid value for {property}';
 		}
 	}

@@ -316,15 +316,21 @@ class PW_Model
 		/* Override would look like this:
 		return array(
 			array(
-				'properties' => 'order,year_count,year_format',
+				'properties' => 'year_count, year_format, year_template',
+			 	'validator'=> array('PW_Validator', 'required')
+				'message' => '{property} is required, biatch!'
+			),
+			array(
+				'properties' => 'year_format',
 			 	'validator'=> array('PW_Validator', 'match')
 				'message' => 'There is an error on field {property}.'
 				'pattern' => '/[1-9]{2,4}/',
 			),
 			array(
-				'properties' => 'email',
-				'validator'=> array('PW_Validator', 'email')
-			),			
+				'properties' => 'order',
+				'validator' => array('PW_Validator', 'in_array'),
+				'haystack' => array('ASC','DESC'),
+			),		
 		);
 		*/
 		return array();

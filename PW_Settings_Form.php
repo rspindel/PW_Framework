@@ -138,10 +138,10 @@ class PW_Settings_Form
 	 * @return string The generated HTML markup
 	 * @since 1.0
 	 */
-	public function checkbox_list( $property, $items, $separator, $atts=array(), $extra = '' )
+	public function checkbox_list( $property, $separator, $atts=array(), $extra = '' )
 	{
 		extract( $this->get_field_data_from_model($property) ); // returns $error, $label, $name, $value, $id
-		$field = PW_HTML::checkbox_list( $name, $items, $value, $separator, $atts);
+		$field = PW_HTML::checkbox_list( $name, $options, $value, $separator, $atts);
 		
 		echo esc_html($field);
 		
@@ -158,10 +158,10 @@ class PW_Settings_Form
 	 * @return string The generated HTML markup
 	 * @since 1.0
 	 */
-	public function radio_button_list( $property, $items, $separator, $atts=array(), $extra = '' )
+	public function radio_button_list( $property, $separator, $atts=array(), $extra = '' )
 	{
 		extract( $this->get_field_data_from_model($property) ); // returns $error, $label, $name, $value, $id
-		$field = PW_HTML::radio_button_list( $name, $items, $value, $separator, $atts);
+		$field = PW_HTML::radio_button_list( $name, $options, $value, $separator, $atts);
 		return $this->render_field($label, $field, $desc, $extra, $error);
 	}
 	
@@ -189,12 +189,12 @@ class PW_Settings_Form
 	 * @return string The generated HTML markup
 	 * @since 1.0
 	 */
-	public function select( $property, $items, $atts=array(), $extra = '' )
+	public function select( $property, $atts=array(), $extra = '' )
 	{
 		extract( $this->get_field_data_from_model($property) ); // returns $error, $label, $name, $value, $id
 		
 		$label = PW_HTML::label($label, $id);
-		$field = PW_HTML::select( $name, $items, $value, $atts);
+		$field = PW_HTML::select( $name, $options, $value, $atts);
 		
 		return $this->render_field($label, $field, $desc, $extra, $error);	
 	}
@@ -227,11 +227,12 @@ class PW_Settings_Form
 	{		
 		$errors = $this->_model->get_errors();
 		$error = isset($errors[$property]) ? $errors[$property] : null;
-		
+	
+		$data = $this->_model->data();
+	
 		// get the label and description of this property
-		$labels = $this->_model->data();
-		$label = isset($labels[$property]['label']) ? $labels[$property]['label'] : '';
-		$desc = isset($labels[$property]['desc']) ? $labels[$property]['desc'] : '';
+		$label = isset($data[$property]['label']) ? $data[$property]['label'] : '';
+		$desc = isset($data[$property]['desc']) ? $data[$property]['desc'] : '';
 			
 		// get the value of the model attribute by this name
 		// if there was a validation error, get the previously submitted value
@@ -242,9 +243,12 @@ class PW_Settings_Form
 		// add the model's option name for easy getting from the $_POST variable after submit
 		$name = $this->_model->get_name() . '[' . $property . ']';
 		
+		// get any options defined (for use in select, checkbox_list, and radio_button_list fields)
+		$options = isset($data[$property]['options']) ? $data[$property]['options'] : array();
+		
 		// create the id from the name
 		$id = PW_HTML::get_id_from_name( $name );
 		
-		return array( 'error'=>$error, 'label'=>$label, 'desc'=>$desc, 'value'=>$value, 'name'=>$name, 'id'=>$id );
+		return array( 'error'=>$error, 'label'=>$label, 'desc'=>$desc, 'value'=>$value, 'name'=>$name, 'id'=>$id, 'options'=>$options );
 	}
 }

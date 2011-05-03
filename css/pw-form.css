@@ -49,3 +49,5 @@
 .pw-form .pw-error input[type="password"],
 .pw-form .pw-error textarea { background-color:#fff8f8; border-color:#c00; }
 .pw-error-message { color:#c00; line-height:1.2; padding:3px 0 0 1px; }
+div.error ul { margin: 0 0 1em 2em; }
+div.error li { font-size:11px; list-style:square; line-height:1em; }

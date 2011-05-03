@@ -88,8 +88,8 @@ class PW_Controller
 	{
 		$model = $this->_model;
 		
-		// validate and save any submitted data
-		if ( isset($_POST[$model->get_name()]) ) {
+		// If the POST data is set and the nonce checks out, validate and save any submitted data
+		if ( isset($_POST[$model->get_name()]) && check_admin_referer( $model->get_name() . '-options' ) ) {
 			
 			// get the options from $_POST
 			$model->input = stripslashes_deep($_POST[$model->get_name()]);
@@ -97,10 +97,7 @@ class PW_Controller
 			// save the options
 			$model->save($model->input);
 		}
-		
-		// var_dump($model);
-		
-		
+
 		// add action hook for admin pages
 		add_action( 'admin_init', array($this, 'on_admin_page') );
 		

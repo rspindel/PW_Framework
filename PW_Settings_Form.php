@@ -23,12 +23,14 @@ class PW_Settings_Form
 				{field}
 				<span class="description">{desc}</span>
 				<div class="extra">{extra}</div>
-				<div class="{error_class}">{error}</div>
+				<div class="{error_message_class}">{error}</div>
 			</div>
 		</li>';
 
 	public $error_class = 'pw-error';
+	public $error_message_class = 'pw-error-message';
 
+	public $error_message = 'Oops. Please fix the following errors and trying submitting again.';
 
 	protected $_model;
 	
@@ -42,11 +44,57 @@ class PW_Settings_Form
 		$this->_model = $model;
 	}
 	
+	public function begin_form( $atts = array() )
+	{
+		$output = '';
+		
+		// Get the screen icon (this is necessary becuase WordPress only echos it)
+		ob_start();
+		ob_implicit_flush(false);
+		screen_icon();
+		$output .= ob_get_clean();
+
+		// Add a title to the form page
+		$output .= '<h2>' . $this->_model->get_title() . '</h2>';
+		
+		// If options were just updated, show a message
+		if ( $this->_model->was_updated() ) {
+			$output .= '<div class="updated"><p><strong>Settings saved.</strong></p></div>';
+		}
+		
+		// If there were errors, show an alert
+		if ( $errors = $this->_model->get_errors() ) {
+			$zc = new PW_Zen_Coder;
+			$output .=
+			'<div class="error">
+				<p><strong>' . $this->error_message . '</strong></p>' . $zc->expand('ul>li*' . count($errors), array_values($errors) ) .
+			'</div>';
+			
+		}
+				
+		// Add the only the opening form tag
+		$atts = wp_parse_args( $atts, array('class'=>'pw-form', 'method'=>'post') );
+		$output .= str_replace('</form>', '', PW_HTML::tag('form', '', $atts) );
+
+		// Add the hidden fields for _nonce and _wp_http_referrer
+		ob_start();
+		ob_implicit_flush(false);
+		wp_nonce_field( $this->_model->get_name() . '-options' );
+		$output .= ob_get_clean();
+
+		return $output;
+	}
+	
+	public function end_form()
+	{
+		return '<p class="submit"><input class="button-primary" type="submit" value="Save" /></p></form>';
+	}
+	
 	public function render_field($label, $field, $desc, $extra, $error)
 	{	
 		$output = str_replace(
-			array('{label}','{field}','{desc}','{extra}','{error}', '{error_class}'),
-			array($label, $field, $desc, $extra, $error, $error ? $this->error_class : '' ),
+			array('{label}','{field}','{desc}','{extra}','{error}','{error_class}','{error_message_class}'),
+			array($label, $field, $desc, $extra, $error, $error ? $this->error_class : '', $error ? $this->error_message_class : '' ),
 			$this->template
 		);
 		
@@ -176,21 +224,20 @@ class PW_Settings_Form
 	 * @since 1.0
 	 */
 	protected function get_field_data_from_model( $property )
-	{	
-		$zc = new PW_Zen_Coder;
-				
+	{		
 		$errors = $this->_model->get_errors();
-		$error = isset($errors[$property]) ? $zc->expand('div.pw-error-message', $errors[$property]) : null;
+		$error = isset($errors[$property]) ? $errors[$property] : null;
 		
 		// get the label and description of this property
 		$labels = $this->_model->data();
 		$label = isset($labels[$property]['label']) ? $labels[$property]['label'] : '';
 		$desc = isset($labels[$property]['desc']) ? $labels[$property]['desc'] : '';
-		
+			
 		// get the value of the model attribute by this name
 		// if there was a validation error, get the previously submitted value
 		// rather than what's stored in the database
-		$value = $error ? $this->_model->input[$property] : $this->_model->$property;
+		$value = isset($this->_model->input[$property]) ? $this->_model->input[$property] : $this->_model->$property;
+
 		
 		// add the model's option name for easy getting from the $_POST variable after submit
 		$name = $this->_model->get_name() . '[' . $property . ']';

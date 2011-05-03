@@ -22,6 +22,13 @@ class PW_Model
 	
 	
 	/**
+	 * Whether or option data was just updated
+	 * @since 1.0
+	 */
+	protected $_updated = false;
+	
+	
+	/**
 	 * The title of options
 	 * This value is used as the default value for both the options page heading and nav menu text
 	 * @since 1.0
@@ -107,16 +114,16 @@ class PW_Model
 	
 	/**
 	 * Adds an error
-	 * @param string $attribute The option attribute name
+	 * @param string $property The option property name
 	 * @param string $message The error message
 	 * @since 1.0
 	 */
-	public function add_error( $attribute, $message )
+	public function add_error( $property, $message )
 	{
-		// Only add an error if an error for this attribute doesn't already exists
+		// Only add an error if an error for this property doesn't already exists
 		// Only the first error encountered will be reported, order the validation rules based on this
-		if ( empty($this->_errors[$attribute]) ) {
-			$this->_errors[$attribute] = $message;
+		if ( empty($this->_errors[$property]) ) {
+			$this->_errors[$property] = $message;
 		}
 	}
 
@@ -124,7 +131,7 @@ class PW_Model
 	/**
 	 * Validates the option against the validation rules returned by $this->rules()
 	 * @param array $option of option to be validated.
-	 * @return array The default attributes and values
+	 * @return array The default properties and values
 	 * @since 1.0
 	 */
 	public function validate($option)
@@ -133,14 +140,19 @@ class PW_Model
 		$rules = $this->rules();
 		foreach( $rules as $rule)
 		{
-			// remove spaces and then split up the comma delimited attribute string into an array
-			$attributes = str_replace(' ', '', $rule['attributes']);
-			$attributes = strpos($attributes, ',') === false ? array($attributes) : explode(',', $attributes);
-			foreach ($attributes as $attribute) {
-				if ( $error = call_user_func($rule['validator'], $option[$attribute]) ) {
+			// remove spaces and then split up the comma delimited property string into an array
+			$properties = str_replace(' ', '', $rule['properties']);
+			$properties = strpos($properties, ',') === false ? array($properties) : explode(',', $properties);
+			foreach ($properties as $property)
+			{
+				// set the input to null if no value was passed but a validation rules was set
+				// this will allow for an error in a situation where someone used firebug to delete HTML dynamically
+				$input = isset($option[$property]) ? $option[$property] : null;
+				$args = isset($rule['args']) ? $rule['args'] : null;
+				if ( $error = call_user_func( $rule['validator'], $input, $args) ) {
 					$message = isset($rule['message']) ? $rule['message'] : $error;
-					$message = str_replace("{attribute}", $attribute, $message);
-					$this->add_error( $attribute, $message );
+					$message = str_replace("{property}", $this->get_label($property), $message);
+					$this->add_error( $property, $message );
 					$valid = false;
 				}
 			}
@@ -160,10 +172,8 @@ class PW_Model
 		if ( $this->validate($option) ) {
 			$this->_errors = array();
 			$this->_option = $option;
+			$this->_updated = true;
 			update_option( $this->_name, $option );
-			
-			// print_r($this->_option);
-			
 			return true;
 		} else {
 			return false;
@@ -195,6 +205,20 @@ class PW_Model
 	}
 	
 	/**
+	 * Return the properties label
+	 * @param string $property The option property
+	 * @return string The label of the property from the data array
+	 * @since 1.0
+	 */	
+	public function get_label( $property )
+	{
+		$data = $this->data();
+		if ( isset($data[$property]['label']) ) {
+			return $data[$property]['label'];
+		}
+	}
+	
+	/**
 	 * Return the name (should be the option name)
 	 * @return string The title
 	 * @since 1.0
@@ -214,6 +238,16 @@ class PW_Model
 		return $this->_title;
 	}
 
+
+	/**
+	 * Returns whether or not the option was just updated
+	 * @return boolean
+	 * @since 1.0
+	 */	
+	public function was_updated()
+	{
+		return $this->_updated;
+	}
 	
 	
 	/**
@@ -240,7 +274,7 @@ class PW_Model
 	 */
 	protected function data()
 	{
-		/* Override like this:
+		/* Override would look like this:
 		return array(
 			'prop1' => array(
 				'label' => 'Prop1 Label',
@@ -259,7 +293,35 @@ class PW_Model
 		return array();
 	}
 
-	
+
+	/**
+	 * Returns a multi-dimensional array of the validation rules
+	 * each returned rule is an array with the following keys:
+	 * 1) 'properties' => a comma separated list of option property names
+	 * 2) 'validator' => a php callback function that returns true if valid and false or an error message if invalid
+	 * 3) 'message' => (optional) a custom message to override the default one (use {property} to refer to that property's label value)
+	 * 4) 'args' => (optional) an array of any additional data to be passed to the callback function
+	 * @return array The validation rules
+	 * @since 1.0
+	 */
+	protected function rules()
+	{
+		/* Override would look like this:
+		return array(
+			array(
+				'properties' => 'order,year_count,year_format',
+			 	'validator'=> array('PW_Validator', 'match')
+				'message' => 'There is an error on field {property}.'
+				'args' => array( 'patter' => '/[1-9]{2,4}/ ),
+			),
+			array(
+				'attributes' => 'email',
+				'validator'=> array('PW_Validator', 'email')
+			),			
+		);
+		*/
+		return array();
+	}
 	
 	/**
 	 * Merges an option with the defaults from self::defaults(). The default uses wp_parse_args()
@@ -271,8 +333,5 @@ class PW_Model
 	{
 		return wp_parse_args( $option, $this->defaults() );
 	}
-	
-	
-	
-	
+
 }

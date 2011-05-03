@@ -26,9 +26,11 @@ class PW_Settings_Form
 		</div>
 	';
 
-
 	public $error_class = 'pw-error';
 	public $error_message_class = 'pw-error-message';
+	
+	public $begin_section_template = '<h3>{section_title}</h3><ul>';
+	public $end_section_template = '</ul>';
 
 	public $error_message = 'Oops. Please fix the following errors and trying submitting again.';
 
@@ -94,6 +96,34 @@ class PW_Settings_Form
 	public function end_form()
 	{
 		$this->return_or_echo( '<p class="submit"><input class="button-primary" type="submit" value="Save" /></p></form>' );
+	}
+	
+	/**
+	 * Create a new section with title and optional description
+	 * @param string $title The section title
+	 * @param string $desc Optional description text to go below the title
+	 * @return string The generated HTML markup
+	 * @since 1.0
+	 */
+	public function begin_section( $title = '', $desc = '' )
+	{
+		$output = str_replace(
+			array('{section_title}','{section_description}'),
+			array($title, $desc),
+			$this->begin_section_template
+		);
+		
+		$this->return_or_echo( $output );
+	}
+	
+	/**
+	 * Close out a section
+	 * @return string The generated HTML markup
+	 * @since 1.0
+	 */
+	public function end_section( )
+	{
+		$this->return_or_echo( $this->end_section_template );
 	}
 	
 	public function render_field($label, $field, $desc, $extra, $error)
@@ -168,22 +198,7 @@ class PW_Settings_Form
 		$this->return_or_echo( $this->render_field($label, $field, $desc, $extra, $error) );
 	}
 	
-	
-	/**
-	 * Create a new section with title and optional description
-	 * @param string $title The section title
-	 * @param string $desc Optional description text to go below the title
-	 * @return string The generated HTML markup
-	 * @since 1.0
-	 */
-	public function section( $title, $desc = null )
-	{
-		$title = '<h3>' . $title . '</h3>';
-		$desc = $desc ? '<p>' . $desc . '</p>' : '';
-		$this->return_or_echo( $title . $desc );
-	}
-	
-	
+		
 	/**
 	 * @param string $property The model option property
 	 * @param array $items A list of value=>label pairs representing each individual option elements

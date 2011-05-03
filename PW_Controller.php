@@ -37,6 +37,11 @@ class PW_Controller
 	
 	
 	/**
+	 * @var array The plugin file
+	 */
+	protected $_plugin_file;
+	
+	/**
 	 * The controller constructor.
 	 * Sets the default model and view (if they exist) according to the naming convention
 	 * For example: If this is Test_Controller then the model would a new instance of Test_Model
@@ -45,37 +50,10 @@ class PW_Controller
 	 */
 	public function __construct()
 	{	
-		/*
-		// Create the model and view objects based on the name of the controller class
-		// but first, make sure we're in a subclass of PW_Controller
-		if ( ($class = get_class($this)) != "PW_Controller" ) {
-			
-			// determine the file that created this object,
-			// then see if there's a model and a view by the same name prefix
-			$backtrace = debug_backtrace();
-			$caller = $backtrace[0]['file'];
-			
-			// make sure this class is named properly before proceeding
-			if ( strpos($class, '_Controller') !== false ) {
-				
-				$prefix = str_replace('_Controller', '', $class);
-				
-				if ( class_exists( $model_name = $prefix . '_Model') ) {
-					$this->_model = new $model_name;
-				}
-				
-				if ( is_file( $file = dirname( $caller ) . '/' . $prefix . '_View.php' ) ) {
-					$this->_view = $file;
-				}	
-			}
-		}
-		
-		// If the model and view objects have been successfully created, call run()
-		// if they haven't been created, you'll have to create them and call run() manually
-		if ( $this->_model && $this->_view ) {
-			$this->run();
-		}
-		*/
+		// determine the file that created this object,
+		// then see if there's a model and a view by the same name prefix
+		$backtrace = debug_backtrace();
+		$this->set_plugin_file($backtrace[0]['file']);
 	}
 	
 	
@@ -157,7 +135,10 @@ class PW_Controller
 			'page' => $page,
 			'capability' => $capability,
 		);
-		add_action( 'admin_menu', array($this, 'add_settings_page') );	
+		add_action( 'admin_menu', array($this, 'add_settings_page') );
+		
+		// add a filter that adds a "settings" link when viewing this plugin in the plugins list
+		add_filter( 'plugin_action_links_' . $this->_plugin_file , array($this, 'add_settings_link' ) );		
 	}
 	
 	
@@ -171,13 +152,23 @@ class PW_Controller
 		extract( $this->_submenu );
 		
 		// add the settings page and store it in a variable
-		$settings_page = add_submenu_page( $page, $title, $title, $capability, $this->_model->get_name(), array($this, 'render_settings_page') );
-		
+		$settings_page = add_submenu_page( $page, $title, $title, $capability, $this->_plugin_file, array($this, 'render_settings_page') );
+				
 		// add a hook to run only when we're on the settings page
 		add_action( 'load-' . $settings_page, array($this, 'on_settings_page') );
 		
 	}
 	
+	/**
+	 * Add settings link on plugin page. Called from add_filter('plugin_action_links_[...]') in self::create_settings_page()
+	 * @return array The new list of links for the plugin on the plugins list page
+	 */
+	public function add_settings_link( $links )
+	{
+		$settings_link = '<a href="options-general.php?page=' . $this->_plugin_file .'">Settings</a>';
+		array_unshift($links, $settings_link); 
+		return $links; 
+	}
 		
 	/**
 	 * This default callback for add_submenu_page()
@@ -227,6 +218,17 @@ class PW_Controller
 	public function set_model( $model ) {
 		$this->_model = $model;
 	}
+
+
+	/**
+	 * Register's the main plugin .php file with the controller
+	 * @param string $file The main plugin .php file
+	 * @since 1.0
+	 */
+	public function set_plugin_file( $file ) {
+		$this->_plugin_file = plugin_basename($file);
+	}
+
 	
 	/**
 	 * Associates a view file with this controller

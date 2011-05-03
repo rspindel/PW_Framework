@@ -16,16 +16,16 @@ class PW_Settings_Form
 {
 	// Don't worry about creating extra markup if {extra} or {error} is empty.
 	// All empty tags are removed before output.
-	public $template = 
-		'<li>
-			<div class="label">{label}</div>
-			<div class="field {error_class}">
-				{field}
-				<span class="description">{desc}</span>
-				<div class="extra">{extra}</div>
-				<div class="{error_message_class}">{error}</div>
-			</div>
-		</li>';
+	public $template = '
+		<div class="label">{label}</div>
+		<div class="field {error_class}">
+			{field}
+			<span class="description">{desc}</span>
+			<div class="extra">{extra}</div>
+			<div class="{error_message_class}">{error}</div>
+		</div>
+	';
+
 
 	public $error_class = 'pw-error';
 	public $error_message_class = 'pw-error-message';
@@ -33,6 +33,12 @@ class PW_Settings_Form
 	public $error_message = 'Oops. Please fix the following errors and trying submitting again.';
 
 	protected $_model;
+	
+	/**
+	 * Whether or not methods should output or return the generated HTML
+	 * @since 1.0
+	 */
+	public $echo = true;
 	
 	
 	public function __construct( $model = null )
@@ -82,12 +88,12 @@ class PW_Settings_Form
 		wp_nonce_field( $this->_model->get_name() . '-options' );
 		$output .= ob_get_clean();
 
-		return $output;
+		$this->return_or_echo($output);
 	}
 	
 	public function end_form()
 	{
-		return '<p class="submit"><input class="button-primary" type="submit" value="Save" /></p></form>';
+		$this->return_or_echo( '<p class="submit"><input class="button-primary" type="submit" value="Save" /></p></form>' );
 	}
 	
 	public function render_field($label, $field, $desc, $extra, $error)
@@ -101,7 +107,7 @@ class PW_Settings_Form
 		// then remove any empty tags
 		$output = preg_replace('/<[^>\/]+><\/[^>]+>/', '', $output);
 
-		return $output;
+		$this->return_or_echo( $output );
 	}
 	
 	/**
@@ -125,7 +131,7 @@ class PW_Settings_Form
 		$field = PW_HTML::checkbox( $name, $selected, $atts, $unchecked_value) . PW_HTML::label($desc, $id);
 		
 		// set the $desc value to '' because the checkbox is already using it for generate the label		
-		return $this->render_field($label, $field, '', $extra, $error);	
+		$this->return_or_echo( $this->render_field($label, $field, '', $extra, $error) );	
 	}
 
 
@@ -142,10 +148,7 @@ class PW_Settings_Form
 	{
 		extract( $this->get_field_data_from_model($property) ); // returns $error, $label, $name, $value, $id
 		$field = PW_HTML::checkbox_list( $name, $options, $value, $separator, $atts);
-		
-		echo esc_html($field);
-		
-		return $this->render_field($label, $field, $desc, $extra, $error);
+		$this->return_or_echo( $this->render_field($label, $field, $desc, $extra, $error) );
 	}
 	
 	
@@ -162,7 +165,7 @@ class PW_Settings_Form
 	{
 		extract( $this->get_field_data_from_model($property) ); // returns $error, $label, $name, $value, $id
 		$field = PW_HTML::radio_button_list( $name, $options, $value, $separator, $atts);
-		return $this->render_field($label, $field, $desc, $extra, $error);
+		$this->return_or_echo( $this->render_field($label, $field, $desc, $extra, $error) );
 	}
 	
 	
@@ -177,7 +180,7 @@ class PW_Settings_Form
 	{
 		$title = '<h3>' . $title . '</h3>';
 		$desc = $desc ? '<p>' . $desc . '</p>' : '';
-		return $title . $desc;
+		$this->return_or_echo( $title . $desc );
 	}
 	
 	
@@ -196,7 +199,7 @@ class PW_Settings_Form
 		$label = PW_HTML::label($label, $id);
 		$field = PW_HTML::select( $name, $options, $value, $atts);
 		
-		return $this->render_field($label, $field, $desc, $extra, $error);	
+		$this->return_or_echo( $this->render_field($label, $field, $desc, $extra, $error) );	
 	}
 	
 	
@@ -214,7 +217,7 @@ class PW_Settings_Form
 		$label = PW_HTML::label($label, $id);
 		$field = PW_HTML::textfield( $name, $value, $atts);
 		
-		return $this->render_field($label, $field, $desc, $extra, $error);
+		$this->return_or_echo( $this->render_field($label, $field, $desc, $extra, $error) );
 	}
 	
 	
@@ -250,5 +253,21 @@ class PW_Settings_Form
 		$id = PW_HTML::get_id_from_name( $name );
 		
 		return array( 'error'=>$error, 'label'=>$label, 'desc'=>$desc, 'value'=>$value, 'name'=>$name, 'id'=>$id, 'options'=>$options );
+	}
+	
+	
+	/**
+	 * Either echos $output or returns it as a string based on the value of $this->echo
+	 * @param string $output The HTML to return or ech
+	 * @return string Only if $this->echo == true
+	 * @since 1.0
+	 */
+	protected function return_or_echo( $output )
+	{
+		if ($this->echo) {
+			echo $output;
+		} else {
+			return $output;
+		}
 	}
 }

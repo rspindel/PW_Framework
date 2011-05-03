@@ -68,7 +68,7 @@ class PW_Model
 	{
 		// first of all, make sure the option name is declared in this model object
 		if ( !$this->_name ) {
-			wp_die( 'Error: the $_name varible must be specified to use subclasses of PW_Model. It should be the same as the option name in the options table.' );
+			wp_die( 'Error: the $_name variable must be specified to use subclasses of PW_Model. It should be the same as the option name in the options table.' );
 		}
 		
 		// if the option is already stored in the database, get it and merge it with the defaults;

@@ -16,7 +16,7 @@ class PW_Framework
 		'PW_Controller' => 'PW_Controller.php',
 		'PW_HTML' => 'PW_HTML.php',
 		'PW_Form' => 'PW_Form.php',
-		'PW_Settings_Form' => 'PW_Settings_Form.php',
+		'PW_Multi_Model_Form' => 'PW_Multi_Model_Form.php',
 		'PW_Model' => 'PW_Model.php',
 		'PW_Multi_Model' => 'PW_Multi_Model.php',
 		'PW_Validator' => 'PW_Validator.php',

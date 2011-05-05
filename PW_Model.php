@@ -76,8 +76,18 @@ class PW_Model
 		if ( $option = get_option($this->_name) ) {
 			$this->_option = $this->merge_with_defaults($option);
 		} else {
-			add_option( $this->_name, $this->defaults(), '', $this->_autoload );
 			$this->_option = $this->defaults();
+		}
+		
+		
+		// If the POST data is set and the nonce checks out, validate and save any submitted data
+		if ( isset($_POST[$this->_name]) && check_admin_referer( $this->_name . '-options' ) ) {
+			
+			// get the options from $_POST
+			$model->input = stripslashes_deep($_POST[$this->_name]);
+			
+			// save the options
+			$model->save($model->input);
 		}
 	}
 	
@@ -134,7 +144,7 @@ class PW_Model
 	 * @return array The default properties and values
 	 * @since 1.0
 	 */
-	public function validate($option)
+	public function validate($input)
 	{
 		$valid = true;
 		$rules = $this->rules();
@@ -145,13 +155,13 @@ class PW_Model
 			$properties = strpos($properties, ',') === false ? array($properties) : explode(',', $properties);
 			foreach ($properties as $property)
 			{
-				// set the input to null if no value was passed but a validation rules was set
+				// set the field to null if no value was passed but a validation rules was set
 				// this will allow for an error in a situation where someone used firebug to delete HTML dynamically
-				$input = isset($option[$property]) ? $option[$property] : null;
+				$field = isset($input[$property]) ? $input[$property] : null;
 				
 				// create an array of values from the rule definition to pass as method arguments to the callback function
 				$args = $rule;
-				array_unshift($args, $input);
+				array_unshift($args, $field);
 				unset($args['properties']);
 				unset($args['validator']);
 				unset($args['message']);
@@ -174,13 +184,13 @@ class PW_Model
 	 * @return boolean Whether or not the option was successfully saved
 	 * @since 1.0
 	 */
-	public function save( $option )
+	public function save( $input )
 	{
-		if ( $this->validate($option) ) {
+		if ( $this->validate($input) ) {
 			$this->_errors = array();
 			$this->_option = $option;
 			$this->_updated = true;
-			update_option( $this->_name, $option );
+			update_option( $this->_name, $input );
 			return true;
 		} else {
 			return false;

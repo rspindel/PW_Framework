@@ -48,12 +48,24 @@ class PW_Controller
 	 * and the view would be a file called Test_View.php in the same directory)
 	 * @since 1.0
 	 */
-	public function __construct()
+	public function __construct( $plugin_file = null )
 	{	
 		// determine the file that created this object,
-		// then see if there's a model and a view by the same name prefix
-		$backtrace = debug_backtrace();
-		$this->set_plugin_file($backtrace[0]['file']);
+		if ( $plugin_file ) {
+			$this->set_plugin_file($plugin_file);
+		} else {
+			// NOTE: this only works if this controller was instantiated by the plugin's main file
+			$backtrace = debug_backtrace();
+			$this->set_plugin_file($backtrace[0]['file']);
+		}
+		
+		// add action hook for admin pages
+		add_action( 'admin_init', array($this, 'on_admin_page') );
+		
+		// add action hook for public pages
+		if ( !is_admin() ) {
+			add_action( 'init', array($this, 'on_public_page') );
+		}
 	}
 	
 	
@@ -64,25 +76,7 @@ class PW_Controller
 	 */
 	public function init()
 	{
-		$model = $this->_model;
 		
-		// If the POST data is set and the nonce checks out, validate and save any submitted data
-		if ( isset($_POST[$model->get_name()]) && check_admin_referer( $model->get_name() . '-options' ) ) {
-			
-			// get the options from $_POST
-			$model->input = stripslashes_deep($_POST[$model->get_name()]);
-			
-			// save the options
-			$model->save($model->input);
-		}
-
-		// add action hook for admin pages
-		add_action( 'admin_init', array($this, 'on_admin_page') );
-		
-		// add action hook for public pages
-		if ( !is_admin() ) {
-			add_action( 'init', array($this, 'on_public_page') );
-		}
 	}
 	
 	/**

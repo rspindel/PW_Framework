@@ -24,47 +24,32 @@
  */
 
 class PW_Multi_Model extends PW_Model
-{
-	/*
-	array(
-		0 => array(
-			'prop1' => 'prop1 value',
-			'prop2' => 'prop2 value',
-			'prop3' => 'prop3 value',
-		),
-		1 => array(
-			'prop1' => 'prop1 a different value',
-			'prop2' => 'prop2 a different value',
-			'prop3' => 'prop3 a different value',
-		),
-		'auto_id' => 2
-	)
-	*/
-	
+{	
 	/**
 	 * @var int The model instance (the option array key) currently being used
 	 * @since 1.0
 	 */
 	protected $_instance;
 	
+	
 	/**
-	 * Associate the option with this model instance. If the option doesn't exist, create it
+	 * Save the option to the database if (and only if) the option passes validation
+	 * @param array $option The option value to store
+	 * @return boolean Whether or not the option was successfully saved
 	 * @since 1.0
 	 */
-	public function __construct()
+	public function save( $input )
 	{
-		// first of all, make sure the option name is declared in this model object
-		if ( !$this->_name ) {
-			wp_die( 'Error: the $_name variable must be specified to use subclasses of PW_Model. It should be the same as the option name in the options table.' );
-		}
 		
-		// if the option is already stored in the database, get it and merge it with the defaults;
-		// otherwise, store the defaults
-		if ( $option = get_option($this->_name) ) {
-			$this->_option = $this->merge_with_defaults($option);
+		
+		if ( $this->validate($input) ) {
+			$this->_errors = array();
+			$this->_option = $option;
+			$this->_updated = true;
+			update_option( $this->_name, $input );
+			return true;
 		} else {
-			add_option( $this->_name, $this->defaults(), '', $this->_autoload );
-			$this->_option = $this->defaults();
+			return false;
 		}
 	}
 	
@@ -94,12 +79,14 @@ class PW_Multi_Model extends PW_Model
 	protected function merge_with_defaults( $option )
 	{
 		$defaults = $this->defaults();	
+		
 		foreach( $option as $key=>$instance )
-		{
-			if ($key != 'auto_id') {
+		{			
+			if ( $key !== 'auto_id')  {
 				$option[$key] = wp_parse_args( $instance, $defaults[0] );
 			}
 		}
+	
 		return $option;
 	}
 	

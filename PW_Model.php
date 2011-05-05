@@ -84,10 +84,10 @@ class PW_Model
 		if ( isset($_POST[$this->_name]) && check_admin_referer( $this->_name . '-options' ) ) {
 			
 			// get the options from $_POST
-			$model->input = stripslashes_deep($_POST[$this->_name]);
+			$this->input = stripslashes_deep($_POST[$this->_name]);
 			
 			// save the options
-			$model->save($model->input);
+			$this->save($this->input);
 		}
 	}
 	
@@ -188,7 +188,7 @@ class PW_Model
 	{
 		if ( $this->validate($input) ) {
 			$this->_errors = array();
-			$this->_option = $option;
+			$this->_option = $input;
 			$this->_updated = true;
 			update_option( $this->_name, $input );
 			return true;

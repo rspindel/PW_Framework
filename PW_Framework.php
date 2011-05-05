@@ -18,6 +18,7 @@ class PW_Framework
 		'PW_Form' => 'PW_Form.php',
 		'PW_Settings_Form' => 'PW_Settings_Form.php',
 		'PW_Model' => 'PW_Model.php',
+		'PW_Multi_Model' => 'PW_Multi_Model.php',
 		'PW_Validator' => 'PW_Validator.php',
 		'PW_Zen_Coder' => 'PW_Zen_Coder.php',		
 	);

@@ -31,13 +31,19 @@ class PW_Multi_Model extends PW_Model
 	 */
 	protected $_instance;
 	
+	/**
+	 * @var int The singular title to describe a single model instance
+	 * @since 1.0
+	 */
+	protected $_singular_title = '';
+	
 	
 	/**
 	 * Check to see if this model should be deleted, then run parent::__construct()
 	 * @since 1.0
 	 */
 	public function __construct()
-	{		
+	{				
 		$this->get_option();
 		
 		// Set $this->_instance, the default is 0 which is the new instance form
@@ -47,7 +53,8 @@ class PW_Multi_Model extends PW_Model
 		if ( empty($this->_option[$this->_instance]) ) {
 			wp_die( "Oops, this page doesn't exist.", "Page does not exist", array('response' => 403) );
 		}
-				
+		
+		// Check to see if the 'Delete' link was clicked
 		if ( 
 			isset($_GET['delete_instance'])
 			&& isset($_GET['_instance'])
@@ -60,10 +67,19 @@ class PW_Multi_Model extends PW_Model
 			wp_redirect( remove_query_arg( array( '_instance', 'delete_instance'), wp_get_referer() ) );
 			exit();
 		}
+
 		
-		
-		
-		parent::__construct();
+		// If the POST data is set and the nonce checks out, validate and save any submitted data
+		if ( isset($_POST[$this->_name]) && check_admin_referer( $this->_name . '-options' ) ) {
+			
+			// get the options from $_POST
+			$this->input = stripslashes_deep($_POST[$this->_name]);
+			
+			// save the options
+			if ( $this->save($this->input) ) {
+				wp_redirect( add_query_arg( '_instance', $this->_option['auto_id']-1, wp_get_referer() ) );				
+			}
+		}
 	}
 	
 	
@@ -131,6 +147,17 @@ class PW_Multi_Model extends PW_Model
 		}
 	
 		return $option;
+	}
+	
+	
+	/**
+	 * Return any the model's singular title if defined, or the title if not
+	 * @return array a list of validation errors keyed to the option array keys
+	 * @since 1.0
+	 */	
+	public function get_singular_title()
+	{
+		return $this->_singular_title ? $this->_singular_title : $this->_title;
 	}
 	
 	

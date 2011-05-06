@@ -60,11 +60,15 @@ div.error li { font-size:11px; list-style:square; line-height:1em; }
 #pw-mm-form .tabs a:hover{color:#D54E21;}
 #pw-mm-form .tabs a.selected{background-color:#ECECEC;border-color:#CCCCCC;color:#464646;font-weight:bold;padding-bottom:8px;}
 
-#pw-mm-form .header { background-color:#ECECEC;border:1px solid #CCCCCC; padding:20px 20px 14px; -moz-border-radius:5px 5px 0 0; -webkit-border-radius:5px 5px 0 0; border-radius:5px 5px 0 0;}
+#pw-mm-form .header { background-color:#ECECEC;border:1px solid #CCCCCC; padding:20px 25px 14px; -moz-border-radius:5px 5px 0 0; -webkit-border-radius:5px 5px 0 0; border-radius:5px 5px 0 0;}
 #pw-mm-form .body{background-color:#FBFBFB; border-left: 1px solid #ccc; border-right:1px solid #ccc; padding:4px 20px 14px;}
 #pw-mm-form .footer{ background-color:#ECECEC;border:1px solid #CCCCCC; padding:14px 20px; -moz-border-radius:0 0 5px 5px; -webkit-border-radius:0 0 5px 5px; border-radius:0 0 5px 5px; }
 
 #pw-mm-form .controls { border-top:1px dotted #ccc; margin-top:5px; }
-#pw-mm-form .model-title{color:#21759B;display:block;font:italic 20px/24px Georgia,"Times New Roman","Bitstream Charter",Times,serif;padding-left:5px;}
+#pw-mm-form .model-title{color:#21759B;display:block;font:italic 20px/24px Georgia,"Times New Roman","Bitstream Charter",Times,serif; }
+#pw-mm-form .model-subtitle { color: #AAA; font-size: .8em; }
+#pw-mm-form .model-subtext { color:#444; font-size:11px; }
+
 #pw-mm-form h3 { border-bottom:1px solid #DDDDDD; margin:1em 0; padding-bottom:6px; }
-#pw-mm-form .submitdelete{ border-bottom:1px solid #FF0000;color:#FF0000;font-size:11px;line-height:15px;margin-left:10px;padding:1px 2px;text-decoration:none; }
+#pw-mm-form .submitdelete { border-bottom:1px solid #F00; color:#F00; font-size:11px; margin-left:10px; padding:2px 3px 1px; text-decoration:none; }
+#pw-mm-form .submitdelete:hover { background-color:#F00; color:#FFF; }

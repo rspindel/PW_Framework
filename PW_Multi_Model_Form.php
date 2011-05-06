@@ -88,7 +88,13 @@ class PW_Multi_Model_Form extends PW_Form
 		$output .= ZC::r('ul.tabs>li*' . count($tabs), $tabs);
 		
 		// create the header
-		$output .= ZC::r('.header>.model-title', 'Create New' );
+		if ($this->_instance) {
+			$title = ZC::r('.model-title', $this->_model->get_singular_title() . ZC::r('span.model-subtitle', " ({$models[$this->_instance]['slug']})") );
+			$subtitle = ZC::r('.model-subtext', 'Use the above slug to reference this ' . $this->_model->get_singular_title() . ' instance in widgets, shortcode, or function calls.');
+			$output .= ZC::r('.header', $title . $subtitle);
+		} else {
+			$output.= ZC::r('.header>.model-title', 'Create New ' . $this->_model->get_singular_title() );
+		}
 		
 		// open the body tag
 		$output .= '<div class="body">';
@@ -112,7 +118,7 @@ class PW_Multi_Model_Form extends PW_Form
 	{
 		$submit_button = ZC::r('input.button-primary{%1}', array('type'=>'submit', 'value'=> $this->_instance ? "Update" : "Create") , null);
 		$delete_url = wp_nonce_url( add_query_arg('delete_instance', '1'), 'delete_instance' );
-		$delete_link = ZC::r('a.submitdelete[href="' . $delete_url .'"]', 'Delete');
+		$delete_link = ZC::r('a.submitdelete[href="' . $delete_url .'"]', 'Delete ' . $this->_model->get_singular_title() );
 		
 		return $submit_button . $delete_link;		
 	}

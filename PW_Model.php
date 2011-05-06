@@ -29,7 +29,7 @@ class PW_Model
 	
 	
 	/**
-	 * The title of options
+	 * The title of this model
 	 * This value is used as the default value for both the options page heading and nav menu text
 	 * @since 1.0
 	 */

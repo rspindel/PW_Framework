@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: PW_Zen_Coder
+Plugin Name: ZC
 Plugin URI: http://philipwalton.com/2011/04/06/zen-coding-for-php-and-wordpress/
 Description:
 Version: 0.1
@@ -168,4 +168,4 @@ class ZC
 		return $flattened_args;
 	}
 		
-} // Class PW_Zen_Coder
+} // Class ZC

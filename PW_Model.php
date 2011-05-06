@@ -73,19 +73,7 @@ class PW_Model
 	 */
 	public function __construct()
 	{
-		// first of all, make sure the option name is declared in this model object
-		if ( !$this->_name ) {
-			wp_die( 'Error: the $_name variable must be specified to use subclasses of PW_Model. It should be the same as the option name in the options table.' );
-		}
-		
-		// if the option is already stored in the database, get it and merge it with the defaults;
-		// otherwise, store the defaults
-		if ( $option = get_option($this->_name) ) {
-			$this->_option = $this->merge_with_defaults($option);
-		} else {
-			$this->_option = $this->defaults();
-		}
-		
+		$this->get_option();
 		
 		// If the POST data is set and the nonce checks out, validate and save any submitted data
 		if ( isset($_POST[$this->_name]) && check_admin_referer( $this->_name . '-options' ) ) {
@@ -227,7 +215,8 @@ class PW_Model
 	}
 	
 	/**
-	 * Get the current value of the option
+	 * if the option is already stored in the database, get it and merge it with the defaults;
+	 * otherwise, store the defaults
 	 * @since 1.0
 	 */
 	public function get_option()

@@ -26,6 +26,48 @@
 class PW_Multi_Model extends PW_Model
 {	
 	/**
+	 * @var int The model instance (the option array key) currently being used
+	 * @since 1.0
+	 */
+	protected $_instance;
+	
+	
+	/**
+	 * Check to see if this model should be deleted, then run parent::__construct()
+	 * @since 1.0
+	 */
+	public function __construct()
+	{		
+		$this->get_option();
+		
+		// Set $this->_instance, the default is 0 which is the new instance form
+		$this->_instance = isset($_GET['_instance']) ? (int) $_GET['_instance'] : 0;
+		
+		// if $this->_instance 
+		if ( empty($this->_option[$this->_instance]) ) {
+			wp_die( "Oops, this page doesn't exist.", "Page does not exist", array('response' => 403) );
+		}
+				
+		if ( 
+			isset($_GET['delete_instance'])
+			&& isset($_GET['_instance'])
+			&& check_admin_referer('delete_instance')
+		) {
+			unset( $this->_option[ (int) $_GET['_instance'] ] );
+			update_option( $this->_name, $this->_option );
+			
+			// redirect the page and remove _instance' and 'delete_instance' from the URL
+			wp_redirect( remove_query_arg( array( '_instance', 'delete_instance'), wp_get_referer() ) );
+			exit();
+		}
+		
+		
+		
+		parent::__construct();
+	}
+	
+	
+	/**
 	 * Save the option to the database if (and only if) the option passes validation
 	 * @param array $option The option value to store
 	 * @return boolean Whether or not the option was successfully saved

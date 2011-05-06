@@ -87,12 +87,34 @@ class PW_Multi_Model_Form extends PW_Form
 		
 		$output .= ZC::r('ul.tabs>li*' . count($tabs), $tabs);
 		
+		// create the header
+		$output .= ZC::r('.header>.model-title', 'Create New' );
+		
+		// open the body tag
+		$output .= '<div class="body">';
+		
 		$this->return_or_echo( $output );
 	}
 	
 	public function end_form()
 	{
-		$this->return_or_echo( '<p class="submit"><input class="button-primary" type="submit" value="Save" /></p></form>' );
+		$output = '</div>'; // closes off .body
+		$output .= ZC::r('.footer', $this->do_buttons() );
+		
+		$this->return_or_echo( $output );
+	}
+	
+	
+	/**
+	 * Create the markup for the Create/Update and Delete buttons
+	 */
+	protected function do_buttons()
+	{
+		$submit_button = ZC::r('input.button-primary{%1}', array('type'=>'submit', 'value'=> $this->_instance ? "Update" : "Create") , null);
+		$delete_url = wp_nonce_url( add_query_arg('delete_instance', '1'), 'delete_instance' );
+		$delete_link = ZC::r('a.submitdelete[href="' . $delete_url .'"]', 'Delete');
+		
+		return $submit_button . $delete_link;		
 	}
 
 

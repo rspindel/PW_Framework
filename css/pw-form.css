@@ -43,7 +43,6 @@
 .pw-form input+label,
 .pw-form select+label { margin-left:3px; }
 
-
 /* errors */
 .pw-form .pw-error input[type="text"],
 .pw-form .pw-error input[type="password"],
@@ -51,7 +50,6 @@
 .pw-error-message { color:#c00; line-height:1.2; padding:3px 0 0 1px; }
 div.error ul { margin: 0 0 1em 2em; }
 div.error li { font-size:11px; list-style:square; line-height:1em; }
-
 
 /* multi-model */
 #pw-mm-form { display:block;margin-top:20px;padding:26px 0 20px;position:relative; }
@@ -66,6 +64,7 @@ div.error li { font-size:11px; list-style:square; line-height:1em; }
 #pw-mm-form .body{background-color:#FBFBFB; border-left: 1px solid #ccc; border-right:1px solid #ccc; padding:4px 20px 14px;}
 #pw-mm-form .footer{ background-color:#ECECEC;border:1px solid #CCCCCC; padding:14px 20px; -moz-border-radius:0 0 5px 5px; -webkit-border-radius:0 0 5px 5px; border-radius:0 0 5px 5px; }
 
+#pw-mm-form .controls { border-top:1px dotted #ccc; margin-top:5px; }
 #pw-mm-form .model-title{color:#21759B;display:block;font:italic 20px/24px Georgia,"Times New Roman","Bitstream Charter",Times,serif;padding-left:5px;}
 #pw-mm-form h3 { border-bottom:1px solid #DDDDDD; margin:1em 0; padding-bottom:6px; }
-#pw-mm-form .submitdelete{border-bottom:1px solid #FF0000;color:#FF0000;font-size:11px;line-height:15px;margin-left:10px;padding:1px 2px;text-decoration:none;}
+#pw-mm-form .submitdelete{ border-bottom:1px solid #FF0000;color:#FF0000;font-size:11px;line-height:15px;margin-left:10px;padding:1px 2px;text-decoration:none; }

@@ -72,10 +72,9 @@ class PW_Form
 		
 		// If there were errors, show an alert
 		if ( $errors = $this->_model->get_errors() ) {
-			$zc = new PW_Zen_Coder;
 			$output .=
 			'<div class="error">
-				<p><strong>' . $this->error_message . '</strong></p>' . $zc->expand('ul>li*' . count($errors), array_values($errors) ) .
+				<p><strong>' . $this->error_message . '</strong></p>' . ZC::e('ul>li*' . count($errors), array_values($errors) ) .
 			'</div>';
 			
 		}

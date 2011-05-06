@@ -9,7 +9,7 @@ Author URI: http://philipwalton.com
 */
 
 
-class PW_Zen_Coder
+class ZC
 {	
 	/**
 	 * Expand a css-style selector according to the 'Zen Coding' specifications
@@ -21,7 +21,7 @@ class PW_Zen_Coder
 	 * if this is an array and it's part of an iteration loop, the innerHTML is assigned by index
 	 * @return string the entire HTML element
 	 */
-	public function expand($selector = '', $text = null)
+	public function r($selector = '', $text = null)
 	{	
 		// retrieve the passed arguments
 		$args = func_get_args();
@@ -98,7 +98,7 @@ class PW_Zen_Coder
 				for ( $i = 0; $i < $iterations; $i++ )
 				{
 					// flatten the arguments for this iteration
-					$iteration_args = $this->flatten_args( $args, $i );
+					$iteration_args = self::flatten_args( $args, $i );
 					
 					// get the attributes for this iteration (merging with existing atts if needed)
 					$iteration_atts = $arg_index ? array_merge( $atts, $iteration_args[$arg_index] ) : $atts;
@@ -114,20 +114,27 @@ class PW_Zen_Coder
 					// create the element for this iteration, nest it with any children elements
 					$HTML .= PW_HTML::tag(
 						$name,
-						call_user_func_array( array($this, 'expand'), $iteration_args ),				
+						call_user_func_array( array('ZC', 'r'), $iteration_args ),				
 						$iteration_atts
 					);
 				}
 			} else {
 				$HTML .= PW_HTML::tag(
 					$name,
-					call_user_func_array( array($this, 'expand'), $args ),				
+					call_user_func_array( array('ZC', 'r'), $args ),				
 					$arg_index ? array_merge( $atts, $args[$arg_index] ) : $atts
 				);
 			}
 			return $HTML;			
 		}
 
+	}
+	
+	/**
+	 * Calls self::r() and echos the result instead of returning it
+	 */
+	public static function e() {
+		echo call_user_func_array( array('ZC', 'r'), func_get_args() );
 	}
 
 

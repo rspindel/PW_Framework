@@ -23,16 +23,16 @@ class PW_Multi_Model_Form extends PW_Form
 	
 	public function __construct( $model = null )
 	{
-		$this->_model = $model;
-		
-		if ( isset($_GET['_pw_mm_id']) ) {
-			$this->set_instance( $_GET['_pw_mm_id'] );
-		} else {
-			$this->set_instance(0);
+		if ($model) {
+			$this->set_model($model);
+		}
+		if ( isset($_REQUEST['_instance']) ) {
+			$this->_instance = $_REQUEST['_instance'];
 		}
 	}
 
-	public function set_model( $model ) {
+	public function set_model( $model )
+	{
 		$this->_model = $model;
 	}
 	
@@ -45,9 +45,47 @@ class PW_Multi_Model_Form extends PW_Form
 		$this->_instance = $instance;
 	}
 	
+	/**
+	 * Get the instance ID
+	 * @return int The instance of the model loaded
+	 * @since 1.0
+	 */
+	public function get_instance() {
+		return $this->_instance;
+	}
+	
 	public function begin_form( $atts = array() )
-	{
+	{	
+		$atts['class'] = 'pw-multi-model-form pw-form';
 		$output = parent::begin_form($atts);
+		$output .= PW_HTML::tag('input', null, array('type'=>'hidden', 'name'=>'_instance', 'value'=>$this->_instance) );
+		
+		// get the URL of the admin page from the controller
+		$plugin_file = $this->_model->get_controller()->plugin_file;
+		$admin_page = $this->_model->get_controller()->admin_page;
+		
+		// Loop through the multi model to create the form tabs
+		$tabs = array();
+		$models = $this->_model->get_option();
+		foreach($models as $id=>$model)
+		{													
+			if ( 0 === (int) $id || (string) $id === 'auto_id' ) {
+				continue;
+			}
+																			
+			$atts = $this->_instance == $id ? array('class'=>'selected') : array();
+			$atts['href'] = $admin_page . '?page='. $plugin_file . '&_instance=' . $id;
+			$content = $models[$id]['slug'];
+
+			$tabs[] = PW_HTML::tag('a', $content, $atts);
+		}
+		
+		// create the [+] tab
+		$atts = 0 == $this->_instance ? array('class'=>'selected') : array();
+		$atts['href'] = $admin_page . '?page='. $plugin_file;
+		$tabs[] = PW_HTML::tag('a', '+', $atts);
+		
+		$output .= ZC::r('ul.tabs>li*' . count($tabs), $tabs);
 		
 		$this->return_or_echo( $output );
 	}
@@ -56,10 +94,8 @@ class PW_Multi_Model_Form extends PW_Form
 	{
 		$this->return_or_echo( '<p class="submit"><input class="button-primary" type="submit" value="Save" /></p></form>' );
 	}
-	
 
-	
-	
+
 	/**
 	 * @param string $property The model option property
 	 * @return array An array of the property's id, name (the HTML attribute), label, desc, value, and error (if one exists)

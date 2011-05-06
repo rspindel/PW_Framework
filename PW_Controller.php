@@ -16,6 +16,11 @@
 class PW_Controller
 {
 	/**
+	 * @var array The plugin file
+	 */
+	protected $_admin_page = "options-general.php";
+	
+	/**
 	 * @var PW_Model the currently loaded model instance.
 	 */
 	protected $_model;
@@ -70,15 +75,21 @@ class PW_Controller
 	
 	
 	/**
-	 * Perform the primary controller logic in this class
-	 * When subclassing, don't forget to call super::run() first.
-	 * @since 1.0
+	 * PHP getter magic method.
+	 * This method is overridden so that option properties can be directly accessed
+	 * @param string $name The key in the option array
+	 * @return mixed property value
+	 * @see getAttribute
 	 */
-	public function init()
+	public function __get($name)
 	{
 		
+		if ( isset($this->{'_' . $name }) ) {
+			return $this->{'_' . $name };
+		}
 	}
-	
+
+
 	/**
 	 * This method is called from the init hook on any admin page
 	 * @since 1.0
@@ -119,14 +130,11 @@ class PW_Controller
 	 * @param string $menu_slug The slug name to refer to this menu by (should be unique)  
 	 * @since 1.0
 	 */
-	public function create_settings_page( $title = null, $page = 'options-general.php', $capability = 'manage_options' ) 
+	public function create_settings_page( $title = null, $page = null, $capability = 'manage_options' ) 
 	{		
-		// Use the model title as a default if it exists and nothing has been passed
-		$title = $title ? $title : $this->_model->get_title();
-		
 		$this->_submenu = array(
-			'title' => $title,
-			'page' => $page,
+			'title' => $title ? $title : $this->_model->get_title(),
+			'page' => $page ? $page : $this->_admin_page,
 			'capability' => $capability,
 		);
 		add_action( 'admin_menu', array($this, 'add_settings_page') );
@@ -172,7 +180,12 @@ class PW_Controller
 	public function render_settings_page()
 	{
 		$file = $this->_view;
+		
+		// create some vars to pass to the view
 		$vars = $this->_model ? array('model' => $this->_model ) : array();
+		$vars['admin_page'] = $this->_admin_page;
+		$vars['plugin_file'] = $this->_plugin_file;
+		
 		$this->render( $vars, $file );
 	}
 	
@@ -189,8 +202,8 @@ class PW_Controller
 	public function render( $vars = array(), $file = null, $output = true )
 	{
 		// extract $vars so they can be used in the view file
-		extract( $vars );		
-
+		extract( $vars );
+		
 		if ( is_file($file) ) {
 			if ( $output) {
 				require($file);
@@ -210,6 +223,7 @@ class PW_Controller
 	 * @since 1.0
 	 */
 	public function set_model( $model ) {
+		$model->set_controller($this);
 		$this->_model = $model;
 	}
 

@@ -60,6 +60,13 @@ class PW_Model
 	 */
 	protected $_autoload = true;
 
+	
+	/**
+	 * @var string The controller associated with this model
+	 */
+	protected $_controller;
+
+
 	/**
 	 * Associate the option with this model instance. If the option doesn't exist, create it
 	 * @since 1.0
@@ -190,13 +197,24 @@ class PW_Model
 			$this->_errors = array();
 			$this->_option = $input;
 			$this->_updated = true;
-			update_option( $this->_name, $input );
-			return true;
-		} else {
-			return false;
+			if ( update_option( $this->_name, $this->_option ) ) {
+				return true;
+			}
 		}
+		// If you get to here, return false
+		return false;
 	}
-	
+
+
+	/**
+	 * Get the controller object associated with this model
+	 * @return PW_Controller
+	 * @since 1.0
+	 */	
+	public function get_controller()
+	{
+		return $this->_controller;
+	}	
 	
 	/**
 	 * Return any validation errors that exist
@@ -253,6 +271,17 @@ class PW_Model
 	public function get_title()
 	{
 		return $this->_title;
+	}
+	
+	
+	/**
+	 * Set the controller
+	 * @return PW_Controller The controller associated with this model
+	 * @since 1.0
+	 */	
+	public function set_controller( $controller )
+	{
+		$this->_controller = $controller;
 	}
 
 

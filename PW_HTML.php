@@ -32,9 +32,6 @@ class PW_HTML
 	 */
 	public static function tag($name, $text='', $atts=array())
 	{		
-		// escape the tag name
-		$name = tag_escape($name);
-		
 		$output = "<$name";
 		
 		if ( is_array($atts) ) {

@@ -26,31 +26,32 @@
 class PW_Multi_Model extends PW_Model
 {	
 	/**
-	 * @var int The model instance (the option array key) currently being used
-	 * @since 1.0
-	 */
-	protected $_instance;
-	
-	
-	/**
 	 * Save the option to the database if (and only if) the option passes validation
 	 * @param array $option The option value to store
 	 * @return boolean Whether or not the option was successfully saved
 	 * @since 1.0
 	 */
 	public function save( $input )
-	{
-		
+	{	
 		
 		if ( $this->validate($input) ) {
 			$this->_errors = array();
-			$this->_option = $option;
-			$this->_updated = true;
-			update_option( $this->_name, $input );
-			return true;
-		} else {
-			return false;
+			
+			// Make sure an instance ID was passed in the POST, 0 means a new instance
+			if ( isset($_POST['_instance']) ) {
+				
+				// set the instance ID and increment the auto_id
+				$instance = $_POST['_instance'] == 0 ? $this->_option['auto_id']++ : $_POST['_instance'];
+				
+				$this->_option[$instance] = $input;
+				$this->_updated = true;
+				if ( update_option( $this->_name, $this->_option ) ) {
+					return true;
+				}
+			}
 		}
+		// If you get to here, return false
+		return false;
 	}
 	
 	

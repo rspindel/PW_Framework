@@ -54,14 +54,18 @@ div.error li { font-size:11px; list-style:square; line-height:1em; }
 
 
 /* multi-model */
-#pw-theme-parts{display:block;margin-top:20px;padding:26px 0 20px;position:relative;}
-#pw-theme-parts-tabs{display:block;font-size:12px;line-height:12px;padding-left:20px;position:absolute;top:0px;white-space:nowrap;z-index:1;}
-#pw-theme-parts-tabs ul{display:block;}
-#pw-theme-parts-tabs li{display:inline-block;line-height:11px;font-size:11px;}
-#pw-theme-parts-tabs a{background-color:#F4F4F4;border-color:#DFDFDF #DFDFDF #CCCCCC;border-radius:5px 5px 0 0;-moz-border-radius:5px 5px 0 0;-webkit-border-radius:5px 5px 0 0;border-style:solid;border-width:1px 1px 0;color:#c1c1c1;display:inline-block;margin-right:6px;padding:7px 12px;text-decoration:none;text-shadow:0 1px 0 #FFFFFF;}
-#pw-theme-parts-tabs a:hover{color:#D54E21;}
-#pw-theme-parts-tabs a.selected{background-color:#ECECEC;border-color:#CCCCCC;color:#464646;font-weight:bold;padding-bottom:8px;}
-#pw-theme-part{background-color:#ECECEC;border:1px solid #CCCCCC;border-radius:5px;-moz-border-radius:5px;-webkit-border-radius:5px;}
+.pw-multi-model-form { display:block;margin-top:20px;padding:26px 0 20px;position:relative; }
+
+
+.pw-multi-model-form .tabs {display:block;font-size:12px;line-height:12px;padding-left:20px;position:absolute;top:0px;white-space:nowrap;z-index:1;}
+.pw-multi-model-form .tabs li{display:inline-block; font-size:11px; line-height:11px; overflow:visible;}
+.pw-multi-model-form .tabs a{background-color:#F4F4F4;border-color:#DFDFDF #DFDFDF #CCCCCC;border-radius:5px 5px 0 0;-moz-border-radius:5px 5px 0 0;-webkit-border-radius:5px 5px 0 0;border-style:solid;border-width:1px 1px 0;color:#c1c1c1;display:inline-block;margin-right:6px;padding:7px 12px;text-decoration:none;text-shadow:0 1px 0 #FFFFFF;}
+.pw-multi-model-form .tabs a:hover{color:#D54E21;}
+.pw-multi-model-form .tabs a.selected{background-color:#ECECEC;border-color:#CCCCCC;color:#464646;font-weight:bold;padding-bottom:8px;}
+
+#pw-theme-part {background-color:#ECECEC;border:1px solid #CCCCCC;border-radius:5px;-moz-border-radius:5px;-webkit-border-radius:5px;}
+
+
 #pw-theme-part .pw-theme-part-header{border-bottom:1px solid #CCCCCC;padding:20px 20px 14px;}
 #pw-theme-part .part-title{color:#21759B;display:block;font:italic 20px/24px Georgia,"Times New Roman","Bitstream Charter",Times,serif;padding-left:5px;}
 #pw-theme-part .part-selector{color:#aaa;font-size:80%;}

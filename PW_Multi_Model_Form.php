@@ -24,36 +24,14 @@ class PW_Multi_Model_Form extends PW_Form
 	public function __construct( $model = null )
 	{
 		if ($model) {
-			$this->set_model($model);
+			$this->_model = $model;
 		}
 		if ( isset($_REQUEST['_instance']) ) {
 			$this->_instance = $_REQUEST['_instance'];
 		}
 	}
 
-	public function set_model( $model )
-	{
-		$this->_model = $model;
-	}
-	
-	/**
-	 * Set the instance ID
-	 * @param int The instance of the model array key to laod
-	 * @since 1.0
-	 */
-	public function set_instance( $instance ) {
-		$this->_instance = $instance;
-	}
-	
-	/**
-	 * Get the instance ID
-	 * @return int The instance of the model loaded
-	 * @since 1.0
-	 */
-	public function get_instance() {
-		return $this->_instance;
-	}
-	
+
 	public function begin_form( $atts = array() )
 	{	
 		$atts['id'] = 'pw-mm-form';
@@ -89,11 +67,11 @@ class PW_Multi_Model_Form extends PW_Form
 		
 		// create the header
 		if ($this->_instance) {
-			$title = ZC::r('.model-title', $this->_model->get_singular_title() . ZC::r('span.model-subtitle', " ({$models[$this->_instance]['slug']})") );
-			$subtitle = ZC::r('.model-subtext', 'Use the above slug to reference this ' . $this->_model->get_singular_title() . ' instance in widgets, shortcode, or function calls.');
+			$title = ZC::r('.model-title', $this->_model->singular_title . ZC::r('span.model-subtitle', " ({$models[$this->_instance]['slug']})") );
+			$subtitle = ZC::r('.model-subtext', 'Use the above slug to reference this ' . $this->_model->singular_title . ' instance in widgets, shortcode, or function calls.');
 			$output .= ZC::r('.header', $title . $subtitle);
 		} else {
-			$output.= ZC::r('.header>.model-title', 'Create New ' . $this->_model->get_singular_title() );
+			$output.= ZC::r('.header>.model-title', 'Create New ' . $this->_model->singular_title );
 		}
 		
 		// open the body tag
@@ -120,7 +98,7 @@ class PW_Multi_Model_Form extends PW_Form
 		
 		if ( 0 != $this->_instance ) {
 			$delete_url = wp_nonce_url( add_query_arg('delete_instance', '1'), 'delete_instance' );
-			$output .= ZC::r('a.submitdelete[href="' . $delete_url .'"]', 'Delete ' . $this->_model->get_singular_title() );	
+			$output .= ZC::r('a.submitdelete[href="' . $delete_url .'"]', 'Delete ' . $this->_model->singular_title );	
 		}
 		
 		return $output;		

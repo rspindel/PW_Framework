@@ -60,7 +60,7 @@ class PW_Multi_Model extends PW_Model
 			&& isset($_GET['_instance'])
 			&& check_admin_referer('delete_instance')
 		) {
-			PW_Alerts::add('updated', '<p><strong>' . $this->get_singular_title() . ' Instance Deleted</strong></p>' );				
+			PW_Alerts::add('updated', '<p><strong>' . $this->singular_title . ' Instance Deleted</strong></p>' );				
 			
 			unset( $this->_option[ (int) $_GET['_instance'] ] );
 			update_option( $this->_name, $this->_option );
@@ -85,6 +85,22 @@ class PW_Multi_Model extends PW_Model
 				}
 			}
 		}
+	}
+	
+	
+	/**
+	 * PHP getter magic method.
+	 * This method is overridden so that model properties can be directly accessed
+	 * @param string $name The key in the option array
+	 * @return mixed property value
+	 * @see getAttribute
+	 */
+	public function __get($name)
+	{	
+		if ( 'singular_title' == $name ) {
+			return $this->_singular_title ? $this->_singular_title : $this->_title;
+		}
+		return parent::__get($name);
 	}
 	
 	
@@ -162,16 +178,17 @@ class PW_Multi_Model extends PW_Model
 	{
 		return (int) $this->_instance === 0;
 	}
-	
+
 	
 	/**
-	 * Return any the model's singular title if defined, or the title if not
-	 * @return array a list of validation errors keyed to the option array keys
+	 * List any properties that should be readonly
+	 * Call array_merge() with parent::readonly() when subclassing to add more values
+	 * @return array A list of properties the magic method __set() can't access
 	 * @since 1.0
-	 */	
-	public function get_singular_title()
-	{
-		return $this->_singular_title ? $this->_singular_title : $this->_title;
+	 */
+	protected function readonly()
+	{ 
+		return array_merge( parent::readonly(), array('instance', 'singular_title') );
 	}
 	
 	

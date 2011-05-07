@@ -127,7 +127,7 @@ class PW_Model
 	
 	/**
 	 * List any properties that should be readonly
-	 * Call array_merge() with super when subclassing to add more values
+	 * Call array_merge() with parent::readonly() when subclassing to add more values
 	 * @return array A list of properties the magic method __set() can't access
 	 * @since 1.0
 	 */

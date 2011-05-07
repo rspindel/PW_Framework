@@ -58,12 +58,10 @@ class PW_Form
 				
 		PW_Alerts::render();
 		
-		// $this->render_alerts();
-		
 		$output = '';
 				
 		// Add only the opening form tag
-		$atts = wp_parse_args( $atts, array('class'=>'pw-form', 'method'=>'post', 'action'=>'http://wordpress3.dev/wp-admin/options-general.php?page=Tabs%2FTabs.php&_instance=17') );
+		$atts = wp_parse_args( $atts, array('class'=>'pw-form', 'method'=>'post' ) );
 		$output .= str_replace('</form>', '', PW_HTML::tag('form', '', $atts) );
 
 		// Add the hidden fields for _nonce and _wp_http_referrer

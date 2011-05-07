@@ -171,6 +171,16 @@ class PW_Model
 				}
 			}
 		}
+		
+		// Add an alert for any errors
+		if ( $errors = $this->get_errors() ) {
+			PW_Alerts::add(
+				'error',
+				'<p><strong>Please fix the following errors and trying submitting again.</strong></p>' . ZC::r('ul>li*' . count($errors), array_values($errors) ) ,
+				0
+			);
+		}
+			
 		return $valid;
 	}
 	
@@ -186,12 +196,8 @@ class PW_Model
 		if ( $this->validate($input) ) {
 			$this->_errors = array();
 			$this->_option = $input;
-			if ( update_option( $this->_name, $this->_option ) ) {
-				PW_Alerts::add('updated', '<p><strong>Settings Saved</strong></p>' );				
-				return true;
-			} else {
-				wp_die('Error Saving Settings');
-			}
+			PW_Alerts::add('updated', '<p><strong>Settings Saved</strong></p>' );				
+			return true;
 		}
 		// If you get to here, return false
 		return false;

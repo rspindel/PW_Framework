@@ -45,10 +45,14 @@ class PW_Multi_Model extends PW_Model
 	public function __construct()
 	{				
 		$this->get_option();
+
+		// Set $this->_instance, the default is 0 which is the new instance form
+		$this->_instance = isset($_GET['_instance']) ? (int) $_GET['_instance'] : 0;
 		
-		PW_Alerts::add('updated', '<p><strong>Test Alert</strong></p>' );				
-		
-		
+		// if $this->_instance 
+		if ( empty($this->_option[$this->_instance]) ) {
+			wp_die( "Oops, this page doesn't exist.", "Page does not exist", array('response' => 403) );
+		}
 		
 		// Check to see if the 'Delete' link was clicked
 		if ( 
@@ -76,30 +80,11 @@ class PW_Multi_Model extends PW_Model
 			// save the options
 			if ( $this->save($this->input) ) {
 				if ( $_POST['_instance'] == 0 ) {
-					wp_redirect( add_query_arg( '_instance', $this->_option['auto_id']-1, wp_get_referer() ) );
+					wp_redirect( add_query_arg( '_instance', $this->_option['auto_id'] - 1, wp_get_referer() ) );				
 					exit();
-				}
-			} else {
-				// If there were errors, show an alert
-				if ( $errors = $this->get_errors() ) {
-					PW_Alerts::add(
-						'error',
-						'<p><strong>Oops. Please fix the following errors and trying submitting again.</strong></p>' . ZC::r('ul>li*' . count($errors), array_values($errors) ) ,
-						0
-					);
 				}
 			}
 		}
-		
-		
-		// Set $this->_instance, the default is 0 which is the new instance form
-		$this->_instance = isset($_GET['_instance']) ? (int) $_GET['_instance'] : 0;
-		
-		// if $this->_instance 
-		if ( empty($this->_option[$this->_instance]) ) {
-			wp_die( "Oops, this page doesn't exist.", "Page does not exist", array('response' => 403) );
-		}
-		
 	}
 	
 	

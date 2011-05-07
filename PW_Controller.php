@@ -133,7 +133,7 @@ class PW_Controller
 	public function create_settings_page( $title = null, $page = null, $capability = 'manage_options' ) 
 	{		
 		$this->_submenu = array(
-			'title' => $title ? $title : $this->_model->get_title(),
+			'title' => $title ? $title : $this->_model->title,
 			'page' => $page ? $page : $this->_admin_page,
 			'capability' => $capability,
 		);

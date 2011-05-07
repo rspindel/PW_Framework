@@ -75,10 +75,10 @@ class PW_Multi_Model extends PW_Model
 		if ( isset($_POST[$this->_name]) && check_admin_referer( $this->_name . '-options' ) ) {
 			
 			// get the options from $_POST
-			$this->input = stripslashes_deep($_POST[$this->_name]);
+			$this->_input = stripslashes_deep($_POST[$this->_name]);
 			
 			// save the options
-			if ( $this->save($this->input) ) {
+			if ( $this->save($this->_input) ) {
 				if ( $_POST['_instance'] == 0 ) {
 					wp_redirect( add_query_arg( '_instance', $this->_option['auto_id'] - 1, wp_get_referer() ) );				
 					exit();
@@ -96,7 +96,6 @@ class PW_Multi_Model extends PW_Model
 	 */
 	public function save( $input )
 	{	
-		
 		if ( $this->validate($input) ) {
 			$this->_errors = array();
 			

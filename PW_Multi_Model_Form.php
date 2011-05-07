@@ -155,7 +155,7 @@ class PW_Multi_Model_Form extends PW_Form
 
 		
 		// add the model's option name for easy getting from the $_POST variable after submit
-		$name = $this->_model->get_name() . '[' . $property . ']';
+		$name = $this->_model->name . '[' . $property . ']';
 		
 		// get any options defined (for use in select, checkbox_list, and radio_button_list fields)
 		$options = isset($data[$property]['options']) ? $data[$property]['options'] : array();

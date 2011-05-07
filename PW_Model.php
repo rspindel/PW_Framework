@@ -18,7 +18,7 @@ class PW_Model
 	 * If a form was submitted, this will be the value of the submitted option data
 	 * @since 1.0
 	 */
-	public $input = array();
+	protected $_input = array();
 	
 	
 	/**
@@ -80,26 +80,25 @@ class PW_Model
 		if ( isset($_POST[$this->_name]) && check_admin_referer( $this->_name . '-options' ) ) {
 			
 			// get the options from $_POST
-			$this->input = stripslashes_deep($_POST[$this->_name]);
+			$this->_input = stripslashes_deep($_POST[$this->_name]);
 			
 			// save the options
-			$this->save($this->input);
+			$this->save($this->_input);
 		}
 	}
 	
 	
 	/**
 	 * PHP getter magic method.
-	 * This method is overridden so that option properties can be directly accessed
+	 * This method is overridden so that model properties can be directly accessed
 	 * @param string $name The key in the option array
 	 * @return mixed property value
 	 * @see getAttribute
 	 */
 	public function __get($name)
-	{
-		
-		if ( isset($this->_option[$name]) ) {
-			return $this->_option[$name];
+	{	
+		if ( isset($this->{"_" . $name}) ) {
+			return $this->{"_" . $name};
 		}
 	}
 	
@@ -113,11 +112,29 @@ class PW_Model
 	 */
 	public function __set( $name, $value )
 	{
-		if ( isset($this->_option[$name]) ) {
-			$this->_option[$name] = $value;
+		// Throw an error is a script is trying to access a read-only property
+		if ( in_array($name, $this->readonly() ) ) {
+			$backtrace = debug_backtrace();
+			wp_die( '<strong>Error:</strong> ' . __CLASS__ . '::' . $name . ' is read-only. <br /><strong>' . $backtrace[0]['file'] . '</strong> on line <strong>' . $backtrace[0]['line'] . '</strong>' );
+			exit();
+		}
+		
+		if ( isset($this->{"_" . $name}) ) {
+			$this->{"_" . $name} = $value;
 		}
 	}
 	
+	
+	/**
+	 * List any properties that should be readonly
+	 * Call array_merge() with super when subclassing to add more values
+	 * @return array A list of properties the magic method __set() can't access
+	 * @since 1.0
+	 */
+	protected function readonly()
+	{ 
+		return array( 'name', 'option', 'title' );
+	}
 	
 	/**
 	 * Adds an error
@@ -259,26 +276,6 @@ class PW_Model
 		}
 	}
 	
-	/**
-	 * Return the name (should be the option name)
-	 * @return string The title
-	 * @since 1.0
-	 */	
-	public function get_name()
-	{
-		return $this->_name;
-	}
-	
-	/**
-	 * Return the title
-	 * @return string The title
-	 * @since 1.0
-	 */	
-	public function get_title()
-	{
-		return $this->_title;
-	}
-	
 	
 	/**
 	 * Set the controller
@@ -290,17 +287,6 @@ class PW_Model
 		$this->_controller = $controller;
 	}
 
-
-	/**
-	 * Returns whether or not the option was just updated
-	 * @return boolean
-	 * @since 1.0
-	 */	
-	public function was_updated()
-	{
-		return $this->_updated;
-	}
-	
 	
 	/**
 	 * Returns an array specifying the default option property values

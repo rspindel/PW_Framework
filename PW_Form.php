@@ -67,7 +67,7 @@ class PW_Form
 		// Add the hidden fields for _nonce and _wp_http_referrer
 		ob_start();
 		ob_implicit_flush(false);
-		wp_nonce_field( $this->_model->get_name() . '-options' );
+		wp_nonce_field( $this->_model->name . '-options' );
 		$output .= ob_get_clean();
 
 		$this->return_or_echo($output);
@@ -123,7 +123,7 @@ class PW_Form
 		$output .= ob_get_clean();
 
 		// Add a title to the form page
-		$output .= '<h2>' . $this->_model->get_title() . '</h2>';
+		$output .= '<h2>' . $this->_model->title . '</h2>';
 		
 		$this->return_or_echo( $output );
 	}
@@ -138,7 +138,7 @@ class PW_Form
 		$output = '';
 		
 		// If options were just updated, show a message
-		if ( $this->_model->was_updated() ) {
+		if ( $this->_model->updated ) {
 			$output .= '<div class="updated"><p><strong>Settings saved.</strong></p></div>';
 		}
 		
@@ -286,7 +286,7 @@ class PW_Form
 
 		
 		// add the model's option name for easy getting from the $_POST variable after submit
-		$name = $this->_model->get_name() . '[' . $property . ']';
+		$name = $this->_model->name . '[' . $property . ']';
 		
 		// get any options defined (for use in select, checkbox_list, and radio_button_list fields)
 		$options = isset($data[$property]['options']) ? $data[$property]['options'] : array();

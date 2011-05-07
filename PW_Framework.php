@@ -13,14 +13,15 @@ class PW_Framework
 	 * @var array A list of framework files. Make sure each classname
 	 */
 	public static $files = array(
+		'PW_Object' => 'PW_Object.php',
 		'PW_Alerts' => 'PW_Alerts.php',
-		'PW_Controller' => 'PW_Controller.php',
+		'PW_Validator' => 'PW_Validator.php',
 		'PW_HTML' => 'PW_HTML.php',
-		'PW_Form' => 'PW_Form.php',
-		'PW_Multi_Model_Form' => 'PW_Multi_Model_Form.php',
 		'PW_Model' => 'PW_Model.php',
 		'PW_Multi_Model' => 'PW_Multi_Model.php',
-		'PW_Validator' => 'PW_Validator.php',
+		'PW_Form' => 'PW_Form.php',
+		'PW_Multi_Model_Form' => 'PW_Multi_Model_Form.php',
+		'PW_Controller' => 'PW_Controller.php',
 		'ZC' => 'PW_Zen_Coder.php',		
 	);
 	

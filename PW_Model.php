@@ -55,10 +55,11 @@ class PW_Model
 	protected $_errors = array();
 	
 	/**
-	 * Whether or not the option should be stored as autoload, defaults to TRUE
+	 * Whether or not the option should be stored as autoload, defaults to 'yes'
+	 * @var string 'yes' or 'no'
 	 * @since 1.0
 	 */
-	protected $_autoload = true;
+	protected $_autoload = 'yes';
 
 	
 	/**
@@ -108,6 +109,7 @@ class PW_Model
 	 * This method is overridden so that option properties can be directly accessed
 	 * @param string $name The key in the option array
 	 * @param mixed $value The value to set
+	 * @since 1.0
 	 */
 	public function __set( $name, $value )
 	{
@@ -184,9 +186,11 @@ class PW_Model
 		if ( $this->validate($input) ) {
 			$this->_errors = array();
 			$this->_option = $input;
-			$this->_updated = true;
 			if ( update_option( $this->_name, $this->_option ) ) {
+				PW_Alerts::add('updated', '<p><strong>Settings Saved</strong></p>' );				
 				return true;
+			} else {
+				wp_die('Error Saving Settings');
 			}
 		}
 		// If you get to here, return false
@@ -221,10 +225,17 @@ class PW_Model
 	 */
 	public function get_option()
 	{
+		// If the option is already set in this model, return that
 		if ( $this->_option ) {
 			return $this->_option;
 		} else {
-			return $this->_option = $this->merge_with_defaults( get_option($this->_name) );
+			// If the option exists in the database, merge it with the defaults and return
+			if ( $this->_option = get_option($this->_name) ) {
+				return $this->_option = $this->merge_with_defaults( $this->_option );
+			}
+			// Still here? That means you need to create a new option with the default values
+			add_option( $this->_name, $this->_option = $this->defaults(), '', $this->_autoload );
+			return $this->_option;
 		}
 	}
 	

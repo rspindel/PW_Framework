@@ -29,8 +29,8 @@ class PW_Form
 	public $error_class = 'pw-error';
 	public $error_message_class = 'pw-error-message';
 	
-	public $begin_section_template = '<h3>{section_title}</h3><ul>';
-	public $end_section_template = '</ul>';
+	public $begin_section_template = '<h3>{section_title}</h3>';
+	public $end_section_template = '';
 
 	public $error_message = 'Oops. Please fix the following errors and trying submitting again.';
 
@@ -54,33 +54,16 @@ class PW_Form
 	
 	public function begin_form( $atts = array() )
 	{
-		$output = '';
-		
-		// Get the screen icon (this is necessary becuase WordPress only echos it)
-		ob_start();
-		ob_implicit_flush(false);
-		screen_icon();
-		$output .= ob_get_clean();
-
-		// Add a title to the form page
-		$output .= '<h2>' . $this->_model->get_title() . '</h2>';
-		
-		// If options were just updated, show a message
-		if ( $this->_model->was_updated() ) {
-			$output .= '<div class="updated"><p><strong>Settings saved.</strong></p></div>';
-		}
-		
-		// If there were errors, show an alert
-		if ( $errors = $this->_model->get_errors() ) {
-			$output .=
-			'<div class="error">
-				<p><strong>' . $this->error_message . '</strong></p>' . ZC::r('ul>li*' . count($errors), array_values($errors) ) .
-			'</div>';
-			
-		}
+		$this->render_title();
 				
-		// Add the only the opening form tag
-		$atts = wp_parse_args( $atts, array('class'=>'pw-form', 'method'=>'post') );
+		PW_Alerts::render();
+		
+		// $this->render_alerts();
+		
+		$output = '';
+				
+		// Add only the opening form tag
+		$atts = wp_parse_args( $atts, array('class'=>'pw-form', 'method'=>'post', 'action'=>'http://wordpress3.dev/wp-admin/options-general.php?page=Tabs%2FTabs.php&_instance=17') );
 		$output .= str_replace('</form>', '', PW_HTML::tag('form', '', $atts) );
 
 		// Add the hidden fields for _nonce and _wp_http_referrer
@@ -123,6 +106,53 @@ class PW_Form
 	public function end_section( )
 	{
 		$this->return_or_echo( $this->end_section_template );
+	}
+	
+	
+	/**
+	 * Creates the markup for the page title and screen icon
+	 * @return string The generated HTML markup
+	 * @since 1.0
+	 */
+	public function render_title( )
+	{
+		$output = '';
+		
+		// Get the screen icon (this is necessary becuase WordPress only echos it)
+		ob_start();
+		ob_implicit_flush(false);
+		screen_icon();
+		$output .= ob_get_clean();
+
+		// Add a title to the form page
+		$output .= '<h2>' . $this->_model->get_title() . '</h2>';
+		
+		$this->return_or_echo( $output );
+	}
+	
+	/**
+	 * Creates the markup for any update, info, or error messages that need to be displayed
+	 * @return string The generated HTML markup
+	 * @since 1.0
+	 */
+	public function render_alerts( )
+	{
+		$output = '';
+		
+		// If options were just updated, show a message
+		if ( $this->_model->was_updated() ) {
+			$output .= '<div class="updated"><p><strong>Settings saved.</strong></p></div>';
+		}
+		
+		// If there were errors, show an alert
+		if ( $errors = $this->_model->get_errors() ) {
+			$output .=
+			'<div class="error">
+				<p><strong>' . $this->error_message . '</strong></p>' . ZC::r('ul>li*' . count($errors), array_values($errors) ) .
+			'</div>';	
+		}
+		
+		$this->return_or_echo( $output );
 	}
 	
 	public function render_field($label, $field, $desc, $extra, $error)

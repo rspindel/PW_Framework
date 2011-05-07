@@ -46,13 +46,9 @@ class PW_Multi_Model extends PW_Model
 	{				
 		$this->get_option();
 		
-		// Set $this->_instance, the default is 0 which is the new instance form
-		$this->_instance = isset($_GET['_instance']) ? (int) $_GET['_instance'] : 0;
+		PW_Alerts::add('updated', '<p><strong>Test Alert</strong></p>' );				
 		
-		// if $this->_instance 
-		if ( empty($this->_option[$this->_instance]) ) {
-			wp_die( "Oops, this page doesn't exist.", "Page does not exist", array('response' => 403) );
-		}
+		
 		
 		// Check to see if the 'Delete' link was clicked
 		if ( 
@@ -60,6 +56,8 @@ class PW_Multi_Model extends PW_Model
 			&& isset($_GET['_instance'])
 			&& check_admin_referer('delete_instance')
 		) {
+			PW_Alerts::add('updated', '<p><strong>' . $this->get_singular_title() . ' Instance Deleted</strong></p>' );				
+			
 			unset( $this->_option[ (int) $_GET['_instance'] ] );
 			update_option( $this->_name, $this->_option );
 			
@@ -77,9 +75,31 @@ class PW_Multi_Model extends PW_Model
 			
 			// save the options
 			if ( $this->save($this->input) ) {
-				wp_redirect( add_query_arg( '_instance', $this->_option['auto_id']-1, wp_get_referer() ) );				
+				if ( $_POST['_instance'] == 0 ) {
+					wp_redirect( add_query_arg( '_instance', $this->_option['auto_id']-1, wp_get_referer() ) );
+					exit();
+				}
+			} else {
+				// If there were errors, show an alert
+				if ( $errors = $this->get_errors() ) {
+					PW_Alerts::add(
+						'error',
+						'<p><strong>Oops. Please fix the following errors and trying submitting again.</strong></p>' . ZC::r('ul>li*' . count($errors), array_values($errors) ) ,
+						0
+					);
+				}
 			}
 		}
+		
+		
+		// Set $this->_instance, the default is 0 which is the new instance form
+		$this->_instance = isset($_GET['_instance']) ? (int) $_GET['_instance'] : 0;
+		
+		// if $this->_instance 
+		if ( empty($this->_option[$this->_instance]) ) {
+			wp_die( "Oops, this page doesn't exist.", "Page does not exist", array('response' => 403) );
+		}
+		
 	}
 	
 	
@@ -99,13 +119,12 @@ class PW_Multi_Model extends PW_Model
 			if ( isset($_POST['_instance']) ) {
 				
 				// set the instance ID and increment the auto_id
-				$instance = $_POST['_instance'] == 0 ? $this->_option['auto_id']++ : $_POST['_instance'];
-				
+				$instance = $_POST['_instance'] == 0 ? $this->_option['auto_id']++ : $_POST['_instance'];				
 				$this->_option[$instance] = $input;
-				$this->_updated = true;
-				if ( update_option( $this->_name, $this->_option ) ) {
-					return true;
-				}
+				
+				update_option( $this->_name, $this->_option );
+				PW_Alerts::add('updated', '<p><strong>Settings Saved</strong></p>' );				
+				return true;
 			}
 		}
 		// If you get to here, return false
@@ -125,7 +144,7 @@ class PW_Multi_Model extends PW_Model
 		foreach($data as $property=>$value) {
 			$defaults[$property] = isset($value['default']) ? $value['default'] : '';
 		}
-		return array( 0 => $defaults, 'auto_id' => 1);
+		return array( 0 => $defaults, 'auto_id' => 1 );
 	}
 	
 	
@@ -136,8 +155,8 @@ class PW_Multi_Model extends PW_Model
 	 * @since 1.0
 	 */
 	protected function merge_with_defaults( $option )
-	{
-		$defaults = $this->defaults();	
+	{		
+		$defaults = $this->defaults();
 		
 		foreach( $option as $key=>$instance )
 		{			
@@ -147,6 +166,17 @@ class PW_Multi_Model extends PW_Model
 		}
 	
 		return $option;
+	}
+	
+	
+	/**
+	 * Return true if the instance value is 0, meaning we're on a 'create new' tab
+	 * @return bool
+	 * @since 1.0
+	 */	
+	public function is_new()
+	{
+		return (int) $this->_instance === 0;
 	}
 	
 	

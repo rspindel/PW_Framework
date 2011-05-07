@@ -116,11 +116,14 @@ class PW_Multi_Model_Form extends PW_Form
 	 */
 	protected function do_buttons()
 	{
-		$submit_button = ZC::r('input.button-primary{%1}', array('type'=>'submit', 'value'=> $this->_instance ? "Update" : "Create") , null);
-		$delete_url = wp_nonce_url( add_query_arg('delete_instance', '1'), 'delete_instance' );
-		$delete_link = ZC::r('a.submitdelete[href="' . $delete_url .'"]', 'Delete ' . $this->_model->get_singular_title() );
+		$output = ZC::r('input.button-primary{%1}', array('type'=>'submit', 'value'=> $this->_instance ? "Update" : "Create") , null);
 		
-		return $submit_button . $delete_link;		
+		if ( 0 != $this->_instance ) {
+			$delete_url = wp_nonce_url( add_query_arg('delete_instance', '1'), 'delete_instance' );
+			$output .= ZC::r('a.submitdelete[href="' . $delete_url .'"]', 'Delete ' . $this->_model->get_singular_title() );	
+		}
+		
+		return $output;		
 	}
 
 

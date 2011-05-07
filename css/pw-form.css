@@ -1,7 +1,6 @@
 /* structure */
-.pw-form ol,
 .pw-form ul { margin:0; }
-.pw-form li { margin:0; overflow:hidden; padding:0; }
+.pw-form ul li { margin:0; overflow:hidden; padding:0; }
 .pw-form p { margin-bottom:13px;}
 .pw-form p.desc { color:#666; font-size:11px; font-style:italic; }
 .pw-form .form { background-color:#fff; margin:20px; padding:20px; width:660px; }
@@ -11,8 +10,8 @@
 .pw-form .label.full { float:none; width:auto; }
 .pw-form .field.full { clear:left; padding-left:0; }
 .pw-form .field li, .field p { margin-bottom:5px; }
-.pw-form .field ol.inline li { display:inline; }
-.pw-form .field ol.columns li { display:inline-block; width:30%; }	
+.pw-form .field ul.inline li { display:inline; }
+.pw-form .field ul.columns li { display:inline-block; width:30%; }	
 .pw-form .controls { border-top:1px solid #333; padding-top:10px;}
 .pw-form .controls input.right { float:right; }
 

@@ -34,9 +34,6 @@ class PW_Multi_Model_Form extends PW_Form
 		$output = parent::begin_form($atts);
 		$output .= PW_HTML::tag('input', null, array('type'=>'hidden', 'name'=>'_instance', 'value'=>$this->_model->instance) );
 
-		$admin_page = $this->model->controller->admin_page;
-		$plugin_file = $this->model->controller->plugin_file;
-		
 		// Loop through the multi model to create the form tabs
 		$tabs = array();
 		$instances = $this->_model->get_option();
@@ -47,7 +44,7 @@ class PW_Multi_Model_Form extends PW_Form
 			}
 																			
 			$atts = $this->_model->instance == $id ? array('class'=>'selected') : array();
-			$atts['href'] = $admin_page . '?page='. $plugin_file . '&_instance=' . $id;
+			$atts['href'] = $this->model->controller->admin_page . '?page='. $this->model->name . '&_instance=' . $id;
 			$content = $instance['slug'];
 
 			$tabs[] = PW_HTML::tag('a', $content, $atts);
@@ -55,7 +52,7 @@ class PW_Multi_Model_Form extends PW_Form
 		
 		// create the [+] tab
 		$atts = 0 == $this->_model->instance ? array('class'=>'selected') : array();
-		$atts['href'] =  $admin_page . '?page='. $plugin_file;
+		$atts['href'] =  $this->model->controller->admin_page . '?page='. $this->model->name;
 		$tabs[] = PW_HTML::tag('a', '+', $atts);
 		
 		$output .= ZC::r('ul.tabs>li*' . count($tabs), $tabs);

@@ -56,9 +56,12 @@ class PW_Controller extends PW_Object
 	 * @param string $plugin_file The plugin's main php file
 	 * @since 1.0
 	 */
-	public function __construct( $plugin_file )
+	public function __construct()
 	{			
-		$this->_plugin_file = plugin_basename($plugin_file);
+		if ( empty($this->_plugin_file) ) {
+			$debug = debug_backtrace();
+			$this->_plugin_file = plugin_basename($debug[0]['file']);
+		}
 		
 		// add action hook for admin pages
 		add_action( 'admin_init', array($this, 'on_admin_page') );
@@ -148,7 +151,7 @@ class PW_Controller extends PW_Object
 		extract( $this->_submenu );
 		
 		// add the settings page and store it in a variable
-		$settings_page = add_submenu_page( $page, $title, $title, $capability, $this->_plugin_file, array($this, 'render_settings_page') );
+		$settings_page = add_submenu_page( $page, $title, $title, $capability, $this->model->name, array($this, 'render_settings_page') );
 				
 		// add a hook to run only when we're on the settings page
 		add_action( 'load-' . $settings_page, array($this, 'on_settings_page') );
@@ -161,8 +164,8 @@ class PW_Controller extends PW_Object
 	 * @since 1.0
 	 */
 	public function add_settings_link( $links )
-	{
-		$settings_link = '<a href="options-general.php?page=' . $this->_plugin_file .'">Settings</a>';
+	{		
+		$settings_link = '<a href="options-general.php?page=' . $this->_model->name .'">Settings</a>';
 		array_unshift($links, $settings_link); 
 		return $links; 
 	}
@@ -176,10 +179,9 @@ class PW_Controller extends PW_Object
 	{
 		$file = $this->_view;
 		
-		// create some vars to pass to the view
-		$vars = $this->_model ? array('model' => $this->_model ) : array();
-		$vars['admin_page'] = $this->_admin_page;
-		$vars['plugin_file'] = $this->_plugin_file;
+		// pass the model as $model to the view
+		// all array values are passed to the view as $key
+		$vars = array('model' => $this->_model );
 		
 		$this->render( $vars, $file );
 	}

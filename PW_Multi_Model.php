@@ -151,6 +151,7 @@ class PW_Multi_Model extends PW_Model
 	/**
 	 * Merges a single model at a certain index within the multi model with the defaults from self::defaults()
 	 * Override in a child class for custom merging.
+	 * @see parent
 	 * @return array The merged option
 	 * @since 1.0
 	 */
@@ -183,6 +184,7 @@ class PW_Multi_Model extends PW_Model
 	/**
 	 * List any properties that should be readonly
 	 * Call array_merge() with parent::readonly() when subclassing to add more values
+	 * @see parent
 	 * @return array A list of properties the magic method __set() can't access
 	 * @since 1.0
 	 */

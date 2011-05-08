@@ -37,30 +37,30 @@ class PW_Multi_Model_Form extends PW_Form
 		
 		// Loop through the multi model to create the form tabs
 		$tabs = array();
-		$models = $this->_model->get_option();
-		foreach($models as $id=>$model)
+		$instances = $this->_model->get_option();
+		foreach($instances as $id=>$instance)
 		{													
 			if ( 0 === (int) $id || (string) $id === 'auto_id' ) {
 				continue;
 			}
 																			
 			$atts = $this->_model->instance == $id ? array('class'=>'selected') : array();
-			$atts['href'] = PW::$admin_page . '?page='. PW::$plugin_file . '&_instance=' . $id;
-			$content = $models[$id]['slug'];
+			$atts['href'] = PW::$admin_page . '?page='. $this->controller->plugin_file . '&_instance=' . $id;
+			$content = $instance['slug'];
 
 			$tabs[] = PW_HTML::tag('a', $content, $atts);
 		}
 		
 		// create the [+] tab
 		$atts = 0 == $this->_model->instance ? array('class'=>'selected') : array();
-		$atts['href'] = PW::$admin_page . '?page='. PW::$plugin_file;
+		$atts['href'] = $this->controller->admin_page . '?page='. $this->controller->plugin_file;
 		$tabs[] = PW_HTML::tag('a', '+', $atts);
 		
 		$output .= ZC::r('ul.tabs>li*' . count($tabs), $tabs);
 		
 		// create the header
 		if ($this->_model->instance) {
-			$title = ZC::r('.model-title', $this->_model->singular_title . ZC::r('span.model-subtitle', " ({$models[$this->_model->instance]['slug']})") );
+			$title = ZC::r('.model-title', $this->_model->singular_title . ZC::r('span.model-subtitle', " ({$instances[$this->_model->instance]['slug']})") );
 			$subtitle = ZC::r('.model-subtext', 'Use the above slug to reference this ' . $this->_model->singular_title . ' instance in widgets, shortcode, or function calls.');
 			$output .= ZC::r('.header', $title . $subtitle);
 		} else {

@@ -16,11 +16,29 @@
 class PW_Controller extends PW_Object
 {
 	/**
+	 * @var string The admin page where the settings form will be rendered
+	 * @since 1.0
+	 */
+	protected $_admin_page = 'options-general.php';
+
+	/**
 	 * @var PW_Model the currently loaded model instance.
 	 * @since 1.0
 	 */
 	protected $_model;
 	
+	/**
+	 * @var string The file path of this plugin's main script
+	 * @since 1.0
+	 */
+	protected $_plugin_file;
+
+	/**
+	 * @var array The submenu page data
+	 * @since 1.0
+	 */
+	protected $_submenu;	
+
 	/**
 	 * @var PW_View the currently loaded view instance.
 	 * @since 1.0
@@ -32,19 +50,16 @@ class PW_Controller extends PW_Object
 	 * @since 1.0
 	 */
 	protected $_view_data;
-
-	/**
-	 * @var array The submenu page data
-	 * @since 1.0
-	 */
-	protected $_submenu;
 	
 	/**
 	 * The controller constructor.
+	 * @param string $plugin_file The plugin's main php file
 	 * @since 1.0
 	 */
-	public function __construct()
+	public function __construct( $plugin_file )
 	{			
+		$this->_plugin_file = plugin_basename($plugin_file);
+		
 		// add action hook for admin pages
 		add_action( 'admin_init', array($this, 'on_admin_page') );
 		
@@ -53,7 +68,21 @@ class PW_Controller extends PW_Object
 			add_action( 'init', array($this, 'on_public_page') );
 		}
 	}
-
+	
+	/**
+	 * @see parent
+	 * @since 1.0
+	 */
+	public function __set( $name, $value )
+	{
+		// If we're setting the model, make sure to set $this as the controller in the passed model object
+		if ( 'model' == $name ) {
+			$this->_model = $value;
+			$value->controller = $this;
+		} else {
+			parent::__set( $name, $value );
+		}
+	}
 
 	/**
 	 * This method is called from the init hook on any admin page
@@ -99,13 +128,13 @@ class PW_Controller extends PW_Object
 	{				
 		$this->_submenu = array(
 			'title' => $title ? $title : $this->_model->title,
-			'page' => $page ? $page : PW::$admin_page,
+			'page' => $page ? $page : $this->_admin_page,
 			'capability' => $capability,
 		);
 		add_action( 'admin_menu', array($this, 'add_settings_page') );
 		
 		// add a filter that adds a "settings" link when viewing this plugin in the plugins list
-		add_filter( 'plugin_action_links_' . PW::$plugin_file , array($this, 'add_settings_link' ) );		
+		add_filter( 'plugin_action_links_' . $this->_plugin_file , array($this, 'add_settings_link' ) );		
 	}
 	
 	
@@ -119,7 +148,7 @@ class PW_Controller extends PW_Object
 		extract( $this->_submenu );
 		
 		// add the settings page and store it in a variable
-		$settings_page = add_submenu_page( $page, $title, $title, $capability, PW::$plugin_file, array($this, 'render_settings_page') );
+		$settings_page = add_submenu_page( $page, $title, $title, $capability, $this->_plugin_file, array($this, 'render_settings_page') );
 				
 		// add a hook to run only when we're on the settings page
 		add_action( 'load-' . $settings_page, array($this, 'on_settings_page') );
@@ -133,7 +162,7 @@ class PW_Controller extends PW_Object
 	 */
 	public function add_settings_link( $links )
 	{
-		$settings_link = '<a href="' . PW::$admin_page . '?page=' . PW::$plugin_file .'">Settings</a>';
+		$settings_link = '<a href="options-general.php?page=' . $this->_plugin_file .'">Settings</a>';
 		array_unshift($links, $settings_link); 
 		return $links; 
 	}
@@ -149,8 +178,8 @@ class PW_Controller extends PW_Object
 		
 		// create some vars to pass to the view
 		$vars = $this->_model ? array('model' => $this->_model ) : array();
-		$vars['admin_page'] = PW::$admin_page;
-		$vars['plugin_file'] = PW::$plugin_file;
+		$vars['admin_page'] = $this->_admin_page;
+		$vars['plugin_file'] = $this->_plugin_file;
 		
 		$this->render( $vars, $file );
 	}

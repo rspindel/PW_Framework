@@ -18,17 +18,12 @@ class PW_Multi_Model_Form extends PW_Form
 	 * The multi model array key that identifies the current model instance to display
 	 * @since 1.0
 	 */
-	protected $_instance = 0;
+	// protected $_instance = 0;
 	
 	
-	public function __construct( $model = null )
+	public function __construct( $model )
 	{
-		if ($model) {
-			$this->_model = $model;
-		}
-		if ( isset($_REQUEST['_instance']) ) {
-			$this->_instance = $_REQUEST['_instance'];
-		}
+		$this->_model = $model;
 	}
 
 
@@ -36,11 +31,11 @@ class PW_Multi_Model_Form extends PW_Form
 	{	
 		$atts['id'] = 'pw-mm-form';
 		$output = parent::begin_form($atts);
-		$output .= PW_HTML::tag('input', null, array('type'=>'hidden', 'name'=>'_instance', 'value'=>$this->_instance) );
+		$output .= PW_HTML::tag('input', null, array('type'=>'hidden', 'name'=>'_instance', 'value'=>$this->_model->instance) );
 		
 		// get the URL of the admin page from the controller
-		$plugin_file = $this->_model->get_controller()->plugin_file;
-		$admin_page = $this->_model->get_controller()->admin_page;
+		$plugin_file = $this->_model->controller->plugin_file;
+		$admin_page = $this->_model->controller->admin_page;
 		
 		// Loop through the multi model to create the form tabs
 		$tabs = array();
@@ -51,7 +46,7 @@ class PW_Multi_Model_Form extends PW_Form
 				continue;
 			}
 																			
-			$atts = $this->_instance == $id ? array('class'=>'selected') : array();
+			$atts = $this->_model->instance == $id ? array('class'=>'selected') : array();
 			$atts['href'] = $admin_page . '?page='. $plugin_file . '&_instance=' . $id;
 			$content = $models[$id]['slug'];
 
@@ -59,15 +54,15 @@ class PW_Multi_Model_Form extends PW_Form
 		}
 		
 		// create the [+] tab
-		$atts = 0 == $this->_instance ? array('class'=>'selected') : array();
+		$atts = 0 == $this->_model->instance ? array('class'=>'selected') : array();
 		$atts['href'] = $admin_page . '?page='. $plugin_file;
 		$tabs[] = PW_HTML::tag('a', '+', $atts);
 		
 		$output .= ZC::r('ul.tabs>li*' . count($tabs), $tabs);
 		
 		// create the header
-		if ($this->_instance) {
-			$title = ZC::r('.model-title', $this->_model->singular_title . ZC::r('span.model-subtitle', " ({$models[$this->_instance]['slug']})") );
+		if ($this->_model->instance) {
+			$title = ZC::r('.model-title', $this->_model->singular_title . ZC::r('span.model-subtitle', " ({$models[$this->_model->instance]['slug']})") );
 			$subtitle = ZC::r('.model-subtext', 'Use the above slug to reference this ' . $this->_model->singular_title . ' instance in widgets, shortcode, or function calls.');
 			$output .= ZC::r('.header', $title . $subtitle);
 		} else {
@@ -94,9 +89,9 @@ class PW_Multi_Model_Form extends PW_Form
 	 */
 	protected function do_buttons()
 	{
-		$output = ZC::r('input.button-primary{%1}', array('type'=>'submit', 'value'=> $this->_instance ? "Update" : "Create") , null);
+		$output = ZC::r('input.button-primary{%1}', array('type'=>'submit', 'value'=> $this->_model->instance ? "Update" : "Create") , null);
 		
-		if ( 0 != $this->_instance ) {
+		if ( 0 != $this->_model->instance ) {
 			$delete_url = wp_nonce_url( add_query_arg('delete_instance', '1'), 'delete_instance' );
 			$output .= ZC::r('a.submitdelete[href="' . $delete_url .'"]', 'Delete ' . $this->_model->singular_title );	
 		}
@@ -128,7 +123,7 @@ class PW_Multi_Model_Form extends PW_Form
 			$value =  $this->_model->input[$property];
 		} else {
 			$value = $this->_model->get_option();
-			$value = $value[$this->_instance][$property];
+			$value = $value[$this->_model->instance][$property];
 		}
 
 		

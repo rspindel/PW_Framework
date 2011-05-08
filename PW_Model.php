@@ -171,17 +171,7 @@ class PW_Model extends PW_Object
 		// If you get to here, return false
 		return false;
 	}
-
-
-	/**
-	 * Get the controller object associated with this model
-	 * @return PW_Controller
-	 * @since 1.0
-	 */	
-	public function get_controller()
-	{
-		return $this->_controller;
-	}	
+	
 	
 	/**
 	 * Return any validation errors that exist

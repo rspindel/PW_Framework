@@ -12,11 +12,15 @@
  * @since 1.0
  */
 
-class PW_Form
+class PW_Form extends PW_Object
 {
-	// Don't worry about creating extra markup if {extra} or {error} is empty.
-	// All empty tags are removed before output.
-	public $template = '
+	/**
+	 * @var string The template to create the HTML label/field pairs
+	 * Don't worry about creating extra markup if {extra} or {error} is empty.
+	 * All empty tags are removed before output.
+	 * @since 1.0
+	 */
+	protected $_template = '
 		<div class="label">{label}</div>
 		<div class="field {error_class}">
 			{field}
@@ -26,21 +30,41 @@ class PW_Form
 		</div>
 	';
 
-	public $error_class = 'pw-error';
-	public $error_message_class = 'pw-error-message';
+	/**
+	 * @var string The class applied to the field element if the model contains errors 
+	 * @since 1.0
+	 */
+	protected $_error_class = 'pw-error';
 	
-	public $begin_section_template = '<h3>{section_title}</h3>';
-	public $end_section_template = '';
+	/**
+	 * @var string The class applied to the actual error message element
+	 * @since 1.0
+	 */
+	protected $_error_message_class = 'pw-error-message';
+	
+	/**
+	 * @var string The markup that opens a section
+	 * @since 1.0
+	 */
+	protected $_begin_section_template = '<h3>{section_title}</h3>';
 
-	public $error_message = 'Oops. Please fix the following errors and trying submitting again.';
+	/**
+	 * @var string The markup that closes a section
+	 * @since 1.0
+	 */
+	protected $_end_section_template = '';
 
+	/**
+	 * @var string The model object associated with this form
+	 * @since 1.0
+	 */
 	protected $_model;
 	
 	/**
 	 * Whether or not methods should output or return the generated HTML
 	 * @since 1.0
 	 */
-	public $echo = true;
+	protected $_echo = true;
 	
 	
 	public function __construct( $model = null )
@@ -48,10 +72,7 @@ class PW_Form
 		$this->_model = $model;
 	}
 
-	public function set_model( $model ) {
-		$this->_model = $model;
-	}
-	
+
 	public function begin_form( $atts = array() )
 	{
 		$this->render_title();
@@ -90,7 +111,7 @@ class PW_Form
 		$output = str_replace(
 			array('{section_title}','{section_description}'),
 			array($title, $desc),
-			$this->begin_section_template
+			$this->_begin_section_template
 		);
 		
 		$this->return_or_echo( $output );
@@ -103,7 +124,7 @@ class PW_Form
 	 */
 	public function end_section( )
 	{
-		$this->return_or_echo( $this->end_section_template );
+		$this->return_or_echo( $this->_end_section_template );
 	}
 	
 	
@@ -144,10 +165,7 @@ class PW_Form
 		
 		// If there were errors, show an alert
 		if ( $errors = $this->_model->get_errors() ) {
-			$output .=
-			'<div class="error">
-				<p><strong>' . $this->error_message . '</strong></p>' . ZC::r('ul>li*' . count($errors), array_values($errors) ) .
-			'</div>';	
+			$output .= '<div class="error"><p><strong>' . $this->_error_message . '</strong></p>' . ZC::r('ul>li*' . count($errors), array_values($errors) ) . '</div>';
 		}
 		
 		$this->return_or_echo( $output );
@@ -157,8 +175,8 @@ class PW_Form
 	{	
 		$output = str_replace(
 			array('{label}','{field}','{desc}','{extra}','{error}','{error_class}','{error_message_class}'),
-			array($label, $field, $desc, $extra, $error, $error ? $this->error_class : '', $error ? $this->error_message_class : '' ),
-			$this->template
+			array($label, $field, $desc, $extra, $error, $error ? $this->_error_class : '', $error ? $this->_error_message_class : '' ),
+			$this->_template
 		);
 		
 		// then remove any empty tags

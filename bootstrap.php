@@ -1,7 +1,7 @@
 <?php
 
 // register this version of the framework
-$GLOBALS['pw_framework_meta']['1.1'] = __FILE__;
+$GLOBALS['pw_framework_meta']['1.0'] = __FILE__;
 
 if ( !function_exists('pw_framework_init') ) {
 

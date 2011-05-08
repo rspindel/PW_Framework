@@ -66,13 +66,21 @@ class PW_Form extends PW_Object
 	 */
 	protected $_echo = true;
 	
-	
-	public function __construct( $model = null )
+	/**
+	 * @param PW_Model $model The model object associated with this form
+	 * @since 1.0
+	 */ 
+	public function __construct( $model )
 	{
 		$this->_model = $model;
 	}
 
-
+	/**
+	 * Renders the opening form markup, including the nonce and hidden fields
+	 * @param array $atts Option additional HTML attributes to apply to the form element
+	 * @return string Returns or echos the generated markup
+	 * @since 1.0
+	 */
 	public function begin_form( $atts = array() )
 	{
 		$this->render_title();
@@ -94,6 +102,11 @@ class PW_Form extends PW_Object
 		$this->return_or_echo($output);
 	}
 	
+	/**
+	 * Renders the closing form markup, including the submit/delete buttons
+	 * @return string Returns or echos the generated markup
+	 * @since 1.0
+	 */
 	public function end_form()
 	{
 		$this->return_or_echo( '<p class="submit"><input class="button-primary" type="submit" value="Save" /></p></form>' );
@@ -103,7 +116,7 @@ class PW_Form extends PW_Object
 	 * Create a new section with title and optional description
 	 * @param string $title The section title
 	 * @param string $desc Optional description text to go below the title
-	 * @return string The generated HTML markup
+	 * @return string Returns or echos the generated HTML markup
 	 * @since 1.0
 	 */
 	public function begin_section( $title = '', $desc = '' )
@@ -119,10 +132,10 @@ class PW_Form extends PW_Object
 	
 	/**
 	 * Close out a section
-	 * @return string The generated HTML markup
+	 * @return string Returns or echos the generated HTML markup
 	 * @since 1.0
 	 */
-	public function end_section( )
+	public function end_section()
 	{
 		$this->return_or_echo( $this->_end_section_template );
 	}
@@ -130,10 +143,10 @@ class PW_Form extends PW_Object
 	
 	/**
 	 * Creates the markup for the page title and screen icon
-	 * @return string The generated HTML markup
+	 * @return string Returns or echos the generated HTML markup
 	 * @since 1.0
 	 */
-	public function render_title( )
+	public function render_title()
 	{
 		$output = '';
 		
@@ -148,29 +161,18 @@ class PW_Form extends PW_Object
 		
 		$this->return_or_echo( $output );
 	}
-	
+
 	/**
-	 * Creates the markup for any update, info, or error messages that need to be displayed
-	 * @return string The generated HTML markup
+	 * Replace the placeholders in the template with their string values
+	 * Removes any empty tags before returning the markup
+	 * @param string $label The label markup
+	 * @param string $field The field markup
+	 * @param string $desc The desc markup
+	 * @param string $extra Any extra extra markup
+	 * @param string $error The error markup
+	 * @return string Returns or echos the generated HTML markup
 	 * @since 1.0
 	 */
-	public function render_alerts( )
-	{
-		$output = '';
-		
-		// If options were just updated, show a message
-		if ( $this->_model->updated ) {
-			$output .= '<div class="updated"><p><strong>Settings saved.</strong></p></div>';
-		}
-		
-		// If there were errors, show an alert
-		if ( $errors = $this->_model->get_errors() ) {
-			$output .= '<div class="error"><p><strong>' . $this->_error_message . '</strong></p>' . ZC::r('ul>li*' . count($errors), array_values($errors) ) . '</div>';
-		}
-		
-		$this->return_or_echo( $output );
-	}
-	
 	public function render_field($label, $field, $desc, $extra, $error)
 	{	
 		$output = str_replace(
@@ -288,7 +290,7 @@ class PW_Form extends PW_Object
 	 */
 	protected function get_field_data_from_model( $property )
 	{		
-		$errors = $this->_model->get_errors();
+		$errors = $this->_model->errors;
 		$error = isset($errors[$property]) ? $errors[$property] : null;
 	
 		$data = $this->_model->data();

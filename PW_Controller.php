@@ -13,13 +13,8 @@
  */
 
 
-class PW_Controller
+class PW_Controller extends PW_Object
 {
-	/**
-	 * @var array The plugin file
-	 */
-	protected $_admin_page = "options-general.php";
-	
 	/**
 	 * @var PW_Model the currently loaded model instance.
 	 */
@@ -40,52 +35,18 @@ class PW_Controller
 	 */
 	protected $_submenu;
 	
-	
-	/**
-	 * @var array The plugin file
-	 */
-	protected $_plugin_file;
-	
 	/**
 	 * The controller constructor.
-	 * Sets the default model and view (if they exist) according to the naming convention
-	 * For example: If this is Test_Controller then the model would a new instance of Test_Model
-	 * and the view would be a file called Test_View.php in the same directory)
 	 * @since 1.0
 	 */
-	public function __construct( $plugin_file = null )
-	{	
-		// determine the file that created this object,
-		if ( $plugin_file ) {
-			$this->set_plugin_file($plugin_file);
-		} else {
-			// NOTE: this only works if this controller was instantiated by the plugin's main file
-			$backtrace = debug_backtrace();
-			$this->set_plugin_file($backtrace[0]['file']);
-		}
-		
+	public function __construct()
+	{			
 		// add action hook for admin pages
 		add_action( 'admin_init', array($this, 'on_admin_page') );
 		
 		// add action hook for public pages
 		if ( !is_admin() ) {
 			add_action( 'init', array($this, 'on_public_page') );
-		}
-	}
-	
-	
-	/**
-	 * PHP getter magic method.
-	 * This method is overridden so that option properties can be directly accessed
-	 * @param string $name The key in the option array
-	 * @return mixed property value
-	 * @see getAttribute
-	 */
-	public function __get($name)
-	{
-		
-		if ( isset($this->{'_' . $name }) ) {
-			return $this->{'_' . $name };
 		}
 	}
 
@@ -131,16 +92,16 @@ class PW_Controller
 	 * @since 1.0
 	 */
 	public function create_settings_page( $title = null, $page = null, $capability = 'manage_options' ) 
-	{		
+	{				
 		$this->_submenu = array(
 			'title' => $title ? $title : $this->_model->title,
-			'page' => $page ? $page : $this->_admin_page,
+			'page' => $page ? $page : PW::$admin_page,
 			'capability' => $capability,
 		);
 		add_action( 'admin_menu', array($this, 'add_settings_page') );
 		
 		// add a filter that adds a "settings" link when viewing this plugin in the plugins list
-		add_filter( 'plugin_action_links_' . $this->_plugin_file , array($this, 'add_settings_link' ) );		
+		add_filter( 'plugin_action_links_' . PW::$plugin_file , array($this, 'add_settings_link' ) );		
 	}
 	
 	
@@ -154,7 +115,7 @@ class PW_Controller
 		extract( $this->_submenu );
 		
 		// add the settings page and store it in a variable
-		$settings_page = add_submenu_page( $page, $title, $title, $capability, $this->_plugin_file, array($this, 'render_settings_page') );
+		$settings_page = add_submenu_page( $page, $title, $title, $capability, PW::$plugin_file, array($this, 'render_settings_page') );
 				
 		// add a hook to run only when we're on the settings page
 		add_action( 'load-' . $settings_page, array($this, 'on_settings_page') );
@@ -167,7 +128,7 @@ class PW_Controller
 	 */
 	public function add_settings_link( $links )
 	{
-		$settings_link = '<a href="options-general.php?page=' . $this->_plugin_file .'">Settings</a>';
+		$settings_link = '<a href="' . PW::$admin_page . '?page=' . PW::$plugin_file .'">Settings</a>';
 		array_unshift($links, $settings_link); 
 		return $links; 
 	}
@@ -183,8 +144,8 @@ class PW_Controller
 		
 		// create some vars to pass to the view
 		$vars = $this->_model ? array('model' => $this->_model ) : array();
-		$vars['admin_page'] = $this->_admin_page;
-		$vars['plugin_file'] = $this->_plugin_file;
+		$vars['admin_page'] = PW::$admin_page;
+		$vars['plugin_file'] = PW::$plugin_file;
 		
 		$this->render( $vars, $file );
 	}
@@ -216,36 +177,6 @@ class PW_Controller
 		}
 	}
 	
-	
-	/**
-	 * Associates a model object with this controller
-	 * @param PW_Model $model The model object
-	 * @since 1.0
-	 */
-	public function set_model( $model ) {
-		$model->set_controller($this);
-		$this->_model = $model;
-	}
-
-
-	/**
-	 * Register's the main plugin .php file with the controller
-	 * @param string $file The main plugin .php file
-	 * @since 1.0
-	 */
-	public function set_plugin_file( $file ) {
-		$this->_plugin_file = plugin_basename($file);
-	}
-
-	
-	/**
-	 * Associates a view file with this controller
-	 * @param string $view The view file
-	 * @since 1.0
-	 */
-	public function set_view( $view ) {
-		$this->_view = $view;
-	}
 	
 	/**
 	 * Override to specify any styles that should appear on all public pages when this plugin is active

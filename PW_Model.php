@@ -142,10 +142,10 @@ class PW_Model extends PW_Object
 		}
 		
 		// Add an alert for any errors
-		if ( $errors = $this->get_errors() ) {
+		if ( $this->errors ) {
 			PW_Alerts::add(
 				'error',
-				'<p><strong>Please fix the following errors and trying submitting again.</strong></p>' . ZC::r('ul>li*' . count($errors), array_values($errors) ) ,
+				'<p><strong>Please fix the following errors and trying submitting again.</strong></p>' . ZC::r('ul>li*' . count($this->errors), array_values($this->errors) ) ,
 				0
 			);
 		}
@@ -217,19 +217,7 @@ class PW_Model extends PW_Object
 			return $data[$property]['label'];
 		}
 	}
-	
-	
-	/**
-	 * Set the controller
-	 * @return PW_Controller The controller associated with this model
-	 * @since 1.0
-	 */	
-	public function set_controller( $controller )
-	{
-		$this->_controller = $controller;
-	}
 
-	
 	/**
 	 * Returns an array specifying the default option property values
 	 * @return array The default property values (ex: array( $property => $value ))

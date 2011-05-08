@@ -13,6 +13,7 @@ class PW_Framework
 	 * @var array A list of framework files. Make sure each classname
 	 */
 	public static $files = array(
+		'PW' => 'PW.php',
 		'PW_Object' => 'PW_Object.php',
 		'PW_Alerts' => 'PW_Alerts.php',
 		'PW_Validator' => 'PW_Validator.php',

@@ -1,8 +1,8 @@
 <?php
 /**
- * PW_Form
+ * PW_Multi_Model_Form
  *
- * A helper class to build a form based on a PW_Model object
+ * A helper class to build a form based on a PW_Multi_Model object
  *
  * This class primarily does these things:
  * 1) Renders the markup of the form fields
@@ -14,28 +14,26 @@
 
 class PW_Multi_Model_Form extends PW_Form
 {
+
 	/**
-	 * The multi model array key that identifies the current model instance to display
+	 * @see parent
 	 * @since 1.0
 	 */
-	// protected $_instance = 0;
-	
-	
 	public function __construct( $model )
 	{
 		$this->_model = $model;
 	}
 
-
+	/**
+	 * @see parent
+	 * @since 1.0
+	 */
 	public function begin_form( $atts = array() )
 	{	
 		$atts['id'] = 'pw-mm-form';
 		$output = parent::begin_form($atts);
 		$output .= PW_HTML::tag('input', null, array('type'=>'hidden', 'name'=>'_instance', 'value'=>$this->_model->instance) );
-		
-		// get the URL of the admin page from the controller
-		$plugin_file = $this->_model->controller->plugin_file;
-		$admin_page = $this->_model->controller->admin_page;
+
 		
 		// Loop through the multi model to create the form tabs
 		$tabs = array();
@@ -47,7 +45,7 @@ class PW_Multi_Model_Form extends PW_Form
 			}
 																			
 			$atts = $this->_model->instance == $id ? array('class'=>'selected') : array();
-			$atts['href'] = $admin_page . '?page='. $plugin_file . '&_instance=' . $id;
+			$atts['href'] = PW::$admin_page . '?page='. PW::$plugin_file . '&_instance=' . $id;
 			$content = $models[$id]['slug'];
 
 			$tabs[] = PW_HTML::tag('a', $content, $atts);
@@ -55,7 +53,7 @@ class PW_Multi_Model_Form extends PW_Form
 		
 		// create the [+] tab
 		$atts = 0 == $this->_model->instance ? array('class'=>'selected') : array();
-		$atts['href'] = $admin_page . '?page='. $plugin_file;
+		$atts['href'] = PW::$admin_page . '?page='. PW::$plugin_file;
 		$tabs[] = PW_HTML::tag('a', '+', $atts);
 		
 		$output .= ZC::r('ul.tabs>li*' . count($tabs), $tabs);
@@ -75,19 +73,24 @@ class PW_Multi_Model_Form extends PW_Form
 		$this->return_or_echo( $output );
 	}
 	
+	/**
+	 * @see parent
+	 * @since 1.0
+	 */
 	public function end_form()
 	{
 		$output = '</div>'; // closes off .body
-		$output .= ZC::r('.footer', $this->do_buttons() );
+		$output .= ZC::r('.footer', $this->render_buttons() );
 		
 		$this->return_or_echo( $output );
 	}
 	
-	
 	/**
 	 * Create the markup for the Create/Update and Delete buttons
+	 * @return string The rendered HTML markup
+	 * @since 1.0
 	 */
-	protected function do_buttons()
+	protected function render_buttons()
 	{
 		$output = ZC::r('input.button-primary{%1}', array('type'=>'submit', 'value'=> $this->_model->instance ? "Update" : "Create") , null);
 		
@@ -95,19 +98,16 @@ class PW_Multi_Model_Form extends PW_Form
 			$delete_url = wp_nonce_url( add_query_arg('delete_instance', '1'), 'delete_instance' );
 			$output .= ZC::r('a.submitdelete[href="' . $delete_url .'"]', 'Delete ' . $this->_model->singular_title );	
 		}
-		
 		return $output;		
 	}
 
-
 	/**
-	 * @param string $property The model option property
-	 * @return array An array of the property's id, name (the HTML attribute), label, desc, value, and error (if one exists)
+	 * @see parent
 	 * @since 1.0
 	 */
 	protected function get_field_data_from_model( $property )
 	{		
-		$errors = $this->_model->get_errors();
+		$errors = $this->_model->errors;
 		$error = isset($errors[$property]) ? $errors[$property] : null;
 	
 		$data = $this->_model->data();
@@ -137,6 +137,5 @@ class PW_Multi_Model_Form extends PW_Form
 		$id = PW_HTML::get_id_from_name( $name );
 		
 		return array( 'error'=>$error, 'label'=>$label, 'desc'=>$desc, 'value'=>$value, 'name'=>$name, 'id'=>$id, 'options'=>$options );
-	}
-	
+	}	
 }

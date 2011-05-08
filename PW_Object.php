@@ -20,7 +20,7 @@ class PW_Object
 	 */
 	public function __get($name)
 	{	
-		if ( isset($this->{"_" . $name}) ) {
+		if ( property_exists($this, "_" . $name) ) {
 			return $this->{"_" . $name};
 		}
 	}
@@ -41,8 +41,7 @@ class PW_Object
 			wp_die( '<strong>Error:</strong> ' . get_class($backtrace[0]['object']) . '::' . $name . ' is read-only. <br /><strong>' . $backtrace[0]['file'] . '</strong> on line <strong>' . $backtrace[0]['line'] . '</strong>' );
 			exit();
 		}
-	
-		if ( isset($this->{"_" . $name}) ) {
+		if ( property_exists($this, "_" . $name) ) {
 			$this->{"_" . $name} = $value;
 		}
 	}

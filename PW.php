@@ -10,7 +10,7 @@
 
 class PW
 {
-	public static $plugin_file;
+	public static $plugin_file = 'options-general.php';
 	
 	public static $admin_page;
 	

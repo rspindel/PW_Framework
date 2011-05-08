@@ -17,21 +17,25 @@ class PW_Controller extends PW_Object
 {
 	/**
 	 * @var PW_Model the currently loaded model instance.
+	 * @since 1.0
 	 */
 	protected $_model;
 	
 	/**
 	 * @var PW_View the currently loaded view instance.
+	 * @since 1.0
 	 */
 	protected $_view;
 	
 	/**
 	 * @var array An array of additional data you want to pass to the view
+	 * @since 1.0
 	 */
 	protected $_view_data;
 
 	/**
 	 * @var array The submenu page data
+	 * @since 1.0
 	 */
 	protected $_submenu;
 	
@@ -125,6 +129,7 @@ class PW_Controller extends PW_Object
 	/**
 	 * Add settings link on plugin page. Called from add_filter('plugin_action_links_[...]') in self::create_settings_page()
 	 * @return array The new list of links for the plugin on the plugins list page
+	 * @since 1.0
 	 */
 	public function add_settings_link( $links )
 	{
@@ -181,6 +186,7 @@ class PW_Controller extends PW_Object
 	/**
 	 * Override to specify any styles that should appear on all public pages when this plugin is active
 	 * @return array A list of arrays in the form array( $handle, $src, $deps, $ver, $media) {@link http://codex.wordpress.org/Function_Reference/wp_enqueue_style}
+	 * @since 1.0
 	 */
 	protected function public_styles() {
 		return array();
@@ -189,6 +195,7 @@ class PW_Controller extends PW_Object
 	/**
 	 * Override to specify any styles that should appear on all admin pages when this plugin is active
 	 * @return array A list of arrays in the form array( $handle, $src, $deps, $ver, $media ) {@link http://codex.wordpress.org/Function_Reference/wp_enqueue_style}
+	 * @since 1.0
 	 */
 	protected function admin_styles() {
 		return array();
@@ -198,7 +205,7 @@ class PW_Controller extends PW_Object
 	 * Override to specify any styles that should appear only on this plugin's settings page.
 	 * defaults to the pw-form stylesheet
 	 * @return array A list of arrays in the form array( $handle, $src, $deps, $ver, $media ) {@link http://codex.wordpress.org/Function_Reference/wp_enqueue_style}
-	 * 
+	 * @since 1.0
 	 */
 	protected function settings_styles() {
 		return array(
@@ -209,6 +216,7 @@ class PW_Controller extends PW_Object
 	/**
 	 * Override to specify any scripts that should be loaded on all public pages when this plugin is active
 	 * @return array A list of arrays in the form array( $handle, $src, $deps, $ver, $in_footer ) {@link http://codex.wordpress.org/Function_Reference/wp_enqueue_script}
+	 * @since 1.0
 	 */
 	protected function public_scripts() {
 		return array();
@@ -217,6 +225,7 @@ class PW_Controller extends PW_Object
 	/**
 	 * Override to specify any scripts that should be loaded on all admin pages when this plugin is active
 	 * @return array A list of arrays in the form array( $handle, $src, $deps, $ver, $in_footer ) {@link http://codex.wordpress.org/Function_Reference/wp_enqueue_script}
+	 * @since 1.0
 	 */
 	protected function admin_scripts() {
 		return array();
@@ -225,6 +234,7 @@ class PW_Controller extends PW_Object
 	/**
 	 * Override to specify any scripts that should be loaded only on this plugin's settings page.
 	 * @return array A list of arrays in the form array( $handle, $src, $deps, $ver, $in_footer ) {@link http://codex.wordpress.org/Function_Reference/wp_enqueue_script}
+	 * @since 1.0
 	 */
 	protected function settings_scripts() {
 		return array();
@@ -234,6 +244,7 @@ class PW_Controller extends PW_Object
 	 * Enqueues an array of scripts and styles
 	 * @param array $scripts The scripts to enqueue
 	 * @param array $styles The stylesheets to enqueue
+	 * @since 1.0
 	 */
 	protected function enqueue_scripts_and_styles( $scripts = array(), $styles = array() )
 	{
@@ -248,6 +259,4 @@ class PW_Controller extends PW_Object
 			call_user_func_array( 'wp_enqueue_script', $script );
 		}
 	}
-	
-
 }

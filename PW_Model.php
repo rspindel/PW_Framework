@@ -86,6 +86,21 @@ class PW_Model extends PW_Object
 			$this->save($this->_input);
 		}
 	}
+	
+	
+	/**
+	 * @see parent
+	 * @since 1.0
+	 */
+	public function __get( $name )
+	{
+		// If we're getting $this->_option, return $this->get_option() instead
+		if ( 'option' == $name ) {
+			return $this->get_option();
+		} else {
+			return parent::__get( $name );
+		}
+	}
 
 	
 	/**

@@ -302,7 +302,7 @@ class PW_Form extends PW_Object
 		// get the value of the model attribute by this name
 		// if there was a validation error, get the previously submitted value
 		// rather than what's stored in the database
-		$value = isset($this->_model->input[$property]) ? $this->_model->input[$property] : $this->_model->$property;
+		$value = isset($this->_model->input[$property]) ? $this->_model->input[$property] : $this->_model->option[$property];
 
 		
 		// add the model's option name for easy getting from the $_POST variable after submit

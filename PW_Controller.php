@@ -118,26 +118,27 @@ class PW_Controller extends PW_Object
 	
 
 	/**
-	 * Creates an options page for this controller's model, this is the callback
-	 * from the 'admin_menu' hook set in self::add_options_page()
-	 * @param string $title The text for the page title and the menu link, defaults to the model title
-	 * @param func $view_callback A callback function to render the form output
-	 * @param string $filename The file name of a standard WordPress admin page
-	 * @param string $capability The capability required for this menu to be displayed to the user.
-	 * @param string $menu_slug The slug name to refer to this menu by (should be unique)  
+	 * Creates the action hook necessary to add a settings submenu page
 	 * @since 1.0
 	 */
-	public function create_settings_page( $title = null, $page = null, $capability = 'manage_options' ) 
+	public function create_settings_page() 
 	{				
-		$this->_submenu = array(
-			'title' => $title ? $title : $this->_model->title,
-			'page' => $page ? $page : $this->_admin_page,
-			'capability' => $capability,
-		);
-		add_action( 'admin_menu', array($this, 'add_settings_page') );
+		add_action( 'admin_menu', array($this, 'add_submenu_page') );
 		
 		// add a filter that adds a "settings" link when viewing this plugin in the plugins list
 		add_filter( 'plugin_action_links_' . $this->_plugin_file , array($this, 'add_settings_link' ) );		
+	}
+	
+	
+	/**
+	 * Creates the action hook necessary to add a theme options submenu page
+	 * @since 1.0
+	 */
+	public function create_theme_options_page() 
+	{				
+		$this->_admin_page = 'themes.php';
+		$this->model->capabilities = 'edit_theme_options';
+		add_action( 'admin_menu', array($this, 'add_submenu_page') );		
 	}
 	
 	
@@ -146,15 +147,13 @@ class PW_Controller extends PW_Object
 	 * this is the callback from the 'admin_menu' hook set in self::add_options_page() 
 	 * @since 1.0
 	 */
-	public function add_settings_page()
-	{
-		extract( $this->_submenu );
-		
+	public function add_submenu_page()
+	{		
 		// add the settings page and store it in a variable
-		$settings_page = add_submenu_page( $page, $title, $title, $capability, $this->model->name, array($this, 'render_settings_page') );
+		$submenu = add_submenu_page( $this->_admin_page, $this->_model->title, $this->_model->title, $this->_model->capability, $this->_model->name, array($this, 'render_submenu_page') );
 				
 		// add a hook to run only when we're on the settings page
-		add_action( 'load-' . $settings_page, array($this, 'on_settings_page') );
+		add_action( 'load-' . $submenu, array($this, 'on_settings_page') );
 		
 	}
 	
@@ -175,7 +174,7 @@ class PW_Controller extends PW_Object
 	 * Override this function in a subclass to change the default rendering functionality
 	 * @since 1.0
 	 */
-	public function render_settings_page()
+	public function render_submenu_page()
 	{
 		$file = $this->_view;
 		

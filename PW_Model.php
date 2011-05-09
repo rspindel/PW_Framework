@@ -47,6 +47,12 @@ class PW_Model extends PW_Object
 	 * @since 1.0
 	 */
 	protected $_option = array();
+	
+	/**
+	 * The user capability required to edit this model's option
+	 * @since 1.0
+	 */
+	protected $_capability = 'manage_options';
 		
 	/**
 	 * An array of validation errors if any exist

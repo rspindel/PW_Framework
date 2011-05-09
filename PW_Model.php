@@ -186,6 +186,7 @@ class PW_Model extends PW_Object
 		if ( $this->validate($input) ) {
 			$this->_errors = array();
 			$this->_option = $input;
+			update_option( $this->_name, $this->_option);
 			PW_Alerts::add('updated', '<p><strong>Settings Saved</strong></p>' );				
 			return true;
 		}
@@ -193,16 +194,6 @@ class PW_Model extends PW_Object
 		return false;
 	}
 	
-	
-	/**
-	 * Return any validation errors that exist
-	 * @return array a list of validation errors keyed to the option array keys
-	 * @since 1.0
-	 */	
-	public function get_errors()
-	{
-		return $this->_errors;
-	}
 	
 	/**
 	 * if the option is already stored in the database, get it and merge it with the defaults;
@@ -225,6 +216,7 @@ class PW_Model extends PW_Object
 		}
 	}
 	
+	
 	/**
 	 * Return the properties label
 	 * @param string $property The option property
@@ -238,6 +230,7 @@ class PW_Model extends PW_Object
 			return $data[$property]['label'];
 		}
 	}
+
 
 	/**
 	 * Returns an array specifying the default option property values

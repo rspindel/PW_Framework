@@ -34,6 +34,20 @@ class PW_Controller extends PW_Object
 	protected $_plugin_file;
 
 	/**
+	 * @var array An array of scripts to be added in the appropriate hook
+	 * This array should start every page load empty. Scripts should be added based on conditions
+	 * @since 1.0
+	 */
+	protected $_scripts;
+
+	/**
+	 * @var array An array of styles to be added in the appropriate hook
+	 * This array should start every page load empty. Styles should be added based on conditions
+	 * @since 1.0
+	 */
+	protected $_styles;
+
+	/**
 	 * @var array The submenu page data
 	 * @since 1.0
 	 */
@@ -63,15 +77,21 @@ class PW_Controller extends PW_Object
 			$this->_plugin_file = plugin_basename($debug[0]['file']);
 		}
 		
-		// add action hook for admin pages
-		add_action( 'admin_init', array($this, 'on_admin_page') );
-		
-		// add action hook for public pages
-		if ( !is_admin() ) {
-			add_action( 'init', array($this, 'on_public_page') );
+		// add action hook for public and/or admin pages
+		if ( is_admin() ) {
+			add_action( 'admin_init', array($this, 'on_admin_page') );
+		} else {
+			add_action( 'init', array($this, 'on_public_page') );	
 		}
 		
-		// wp_register_script( 'pw_ajax_validation', PW_FRAMEWORK_DIR . '/js/ajax_validation.js', 'jquery', false, true );
+		// add the action hooks for adding styles and scripts
+		if ( is_admin() ) {
+			add_action( 'admin_enqueue_scripts', array($this, 'enqueue_scripts') );
+			add_action( 'admin_print_styles', array($this, 'print_styles') );			
+		} else {
+			add_action( 'wp_enqueue_scripts', array($this, 'enqueue_scripts') );
+			add_action( 'wp_print_styles', array($this, 'print_styles') );
+		}	
 	}
 	
 	/**
@@ -95,7 +115,8 @@ class PW_Controller extends PW_Object
 	 */
 	public function on_public_page()
 	{
-		$this->enqueue_scripts_and_styles( $this->public_scripts(), $this->public_styles() );
+		$this->_styles = array_merge( (array) $this->_styles, $this->public_styles() );
+		$this->_scripts = array_merge( (array) $this->_scripts, $this->public_scripts() );
 	}
 
 
@@ -105,7 +126,8 @@ class PW_Controller extends PW_Object
 	 */
 	public function on_admin_page()
 	{
-		$this->enqueue_scripts_and_styles( $this->admin_scripts(), $this->admin_styles() );
+		$this->_styles = array_merge( (array) $this->_styles, $this->admin_styles() );
+		$this->_scripts = array_merge( (array) $this->_scripts, $this->admin_scripts() );
 	}
 	
 	/**
@@ -115,7 +137,8 @@ class PW_Controller extends PW_Object
 	 */
 	public function on_settings_page()
 	{
-		$this->enqueue_scripts_and_styles( $this->settings_scripts(), $this->settings_styles() );
+		$this->_styles = array_merge( (array) $this->_styles, $this->settings_styles() );
+		$this->_scripts = array_merge( (array) $this->_scripts, $this->settings_scripts() );	
 	}
 	
 
@@ -250,7 +273,8 @@ class PW_Controller extends PW_Object
 	 * @return array A list of arrays in the form array( $handle, $src, $deps, $ver, $in_footer ) {@link http://codex.wordpress.org/Function_Reference/wp_enqueue_script}
 	 * @since 1.0
 	 */
-	protected function public_scripts() {
+	protected function public_scripts()
+	{
 		return array();
 	}
 	
@@ -259,7 +283,8 @@ class PW_Controller extends PW_Object
 	 * @return array A list of arrays in the form array( $handle, $src, $deps, $ver, $in_footer ) {@link http://codex.wordpress.org/Function_Reference/wp_enqueue_script}
 	 * @since 1.0
 	 */
-	protected function admin_scripts() {
+	protected function admin_scripts()
+	{
 		return array();
 	}
 	
@@ -268,27 +293,38 @@ class PW_Controller extends PW_Object
 	 * @return array A list of arrays in the form array( $handle, $src, $deps, $ver, $in_footer ) {@link http://codex.wordpress.org/Function_Reference/wp_enqueue_script}
 	 * @since 1.0
 	 */
-	protected function settings_scripts() {
-		return array();
+	protected function settings_scripts() 
+	{
+		return array(
+			array( 'pw-ajax-validation', PW_FRAMEWORK_URL . '/js/ajax-validation.js', 'jquery', false, true ),			
+		);
 	}
 	
+	
 	/**
-	 * Enqueues an array of scripts and styles
-	 * @param array $scripts The scripts to enqueue
-	 * @param array $styles The stylesheets to enqueue
+	 * Enqueues all the scripts in $this->_scripts.
+	 * Called from either the wp_enqueue_scripts or admin_enqueue_scripts hook
 	 * @since 1.0
 	 */
-	protected function enqueue_scripts_and_styles( $scripts = array(), $styles = array() )
+	public function enqueue_scripts()
 	{
-		foreach ($styles as $style)
-		{
-			call_user_func_array( 'wp_enqueue_style', $style );
-		}
-		
-		$scripts = $this->settings_scripts();
-		foreach ($scripts as $script)
+		foreach ($this->_scripts as $script)
 		{
 			call_user_func_array( 'wp_enqueue_script', $script );
+		}
+	}
+	
+	
+	/**
+	 * Prints all the styles in $this->_styles.
+	 * Called from either the wp_print_styles or admin_print_styles hook
+	 * @since 1.0
+	 */
+	public function print_styles()
+	{
+		foreach ($this->_styles as $style)
+		{
+			call_user_func_array( 'wp_enqueue_style', $style );
 		}
 	}
 }

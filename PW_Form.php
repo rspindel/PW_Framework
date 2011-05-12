@@ -15,6 +15,12 @@
 class PW_Form extends PW_Object
 {
 	/**
+	 * @var bool Whether or not to use ajax validation on the form
+	 * @since 1.0
+	 */
+	protected $_ajax_validation = true;
+	
+	/**
 	 * @var string The template to create the HTML label/field pairs
 	 * Don't worry about creating extra markup if {extra} or {error} is empty.
 	 * All empty tags are removed before output.
@@ -73,6 +79,10 @@ class PW_Form extends PW_Object
 	public function __construct( $model )
 	{
 		$this->_model = $model;
+		
+		if ( !$this->_ajax_validation ) {
+			wp_deregister_script( 'pw-ajax-validation' );
+		}
 	}
 
 	/**

@@ -70,6 +70,8 @@ class PW_Controller extends PW_Object
 		if ( !is_admin() ) {
 			add_action( 'init', array($this, 'on_public_page') );
 		}
+		
+		// wp_register_script( 'pw_ajax_validation', PW_FRAMEWORK_DIR . '/js/ajax_validation.js', 'jquery', false, true );
 	}
 	
 	/**

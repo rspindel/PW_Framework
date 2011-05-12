@@ -15,6 +15,13 @@
 class PW_Model extends PW_Object
 {
 	/**
+	 * @var bool Whether or not to use ajax validation on the form
+	 * @since 1.0
+	 */
+	protected $_ajax_validation = true;
+	
+	
+	/**
 	 * If a form was submitted, this will be the value of the submitted option data
 	 * @since 1.0
 	 */
@@ -90,6 +97,12 @@ class PW_Model extends PW_Object
 			
 			// save the options
 			$this->save($this->_input);
+		}
+		 		
+		// add the actions for ajax validation
+		if ($this->_ajax_validation) {
+			wp_register_script( 'pw_ajax_validation', PW_FRAMEWORK_URL . '/js/ajax_validation.js', 'jquery', false, true );
+			add_action( 'admin_print_footer_scripts', array($this, 'add_ajax_validation' ) );
 		}
 	}
 	
@@ -172,6 +185,18 @@ class PW_Model extends PW_Object
 		}
 			
 		return $valid;
+	}
+	
+	
+	/**
+	 *
+	 */
+	public function add_ajax_validation()
+	{
+		wp_localize_script( 'pw_ajax_validation', 'ajax_validation', array(
+			'call_ajax' => 'true'
+		));
+		wp_print_scripts( 'pw_ajax_validation' );
 	}
 	
 	

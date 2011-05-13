@@ -131,12 +131,12 @@ class PW_Model extends PW_Object
 	 * @return array The default properties and values
 	 * @since 1.0
 	 */
-	public function validate($input = array(), $validate_on_empty = true)
+	public function validate($input = array(), $validate_all = true)
 	{
-		if ( defined('DOING_AJAX') && constant('DOING_AJAX') == true ) {
+		if ( $is_ajax = ( defined('DOING_AJAX') && constant('DOING_AJAX') == true ) ) {
 			if ( isset($_GET[$this->_name]) ) {
 				$input = $_GET[$this->_name];
-				$validate_on_empty = false;
+				$validate_all = false;
 			} else {
 				exit();
 			}
@@ -156,7 +156,7 @@ class PW_Model extends PW_Object
 				$field = isset($input[$property]) ? $input[$property] : null;
 				
 				// if $validate_on_empty is set to false, allow for empty properties
-				if ( !$validate_on_empty && $field === null ) {
+				if ( !$validate_all && $field === null ) {
 					continue;
 				}
 				
@@ -177,7 +177,7 @@ class PW_Model extends PW_Object
 		}
 		
 		// Add an alert for any errors
-		if ( $this->errors ) {
+		if ( $this->errors && !$is_ajax ) {
 			PW_Alerts::add(
 				'error',
 				'<p><strong>Please fix the following errors and trying submitting again.</strong></p>' . ZC::r('ul>li*' . count($this->errors), array_values($this->errors) ) ,
@@ -185,8 +185,8 @@ class PW_Model extends PW_Object
 			);
 		}
 		
-		if ( defined('DOING_AJAX') && constant('DOING_AJAX') == true ) {
-			echo json_encode($this->errors);
+		if ( $is_ajax ) {
+			echo current($this->_errors);
 			exit();
 		} else {
 			return $valid;

@@ -131,8 +131,17 @@ class PW_Model extends PW_Object
 	 * @return array The default properties and values
 	 * @since 1.0
 	 */
-	public function validate($input)
+	public function validate($input = array(), $validate_on_empty = true)
 	{
+		if ( defined('DOING_AJAX') && constant('DOING_AJAX') == true ) {
+			if ( isset($_GET[$this->_name]) ) {
+				$input = $_GET[$this->_name];
+				$validate_on_empty = false;
+			} else {
+				exit();
+			}
+		} 
+		
 		$valid = true;
 		$rules = $this->rules();
 		foreach( $rules as $rule)
@@ -145,6 +154,11 @@ class PW_Model extends PW_Object
 				// set the field to null if no value was passed but a validation rules was set
 				// this will allow for an error in a situation where someone used firebug to delete HTML dynamically
 				$field = isset($input[$property]) ? $input[$property] : null;
+				
+				// if $validate_on_empty is set to false, allow for empty properties
+				if ( !$validate_on_empty && $field === null ) {
+					continue;
+				}
 				
 				// create an array of values from the rule definition to pass as method arguments to the callback function
 				$args = $rule;
@@ -170,23 +184,16 @@ class PW_Model extends PW_Object
 				0
 			);
 		}
-			
-		return $valid;
+		
+		if ( defined('DOING_AJAX') && constant('DOING_AJAX') == true ) {
+			echo json_encode($this->errors);
+			exit();
+		} else {
+			return $valid;
+		}
 	}
-	
-	
-	/**
-	 *
-	 */
-	public function add_ajax_validation()
-	{
-		wp_localize_script( 'pw_ajax_validation', 'ajax_validation', array(
-			'call_ajax' => 'true'
-		));
-		wp_print_scripts( 'pw_ajax_validation' );
-	}
-	
-	
+
+
 	/**
 	 * Save the option to the database if (and only if) the option passes validation
 	 * @param array $option The option value to store

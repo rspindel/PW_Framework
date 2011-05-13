@@ -91,7 +91,9 @@ class PW_Controller extends PW_Object
 		} else {
 			add_action( 'wp_enqueue_scripts', array($this, 'enqueue_scripts') );
 			add_action( 'wp_print_styles', array($this, 'print_styles') );
-		}	
+		}
+		
+		
 	}
 	
 	/**
@@ -104,6 +106,10 @@ class PW_Controller extends PW_Object
 		if ( 'model' == $name ) {
 			$this->_model = $value;
 			$value->controller = $this;
+			
+			// add the action for the ajax validation request
+			add_action( 'wp_ajax_pw-ajax-validate', array($this->_model, 'validate' ) );
+			
 		} else {
 			parent::__set( $name, $value );
 		}
@@ -138,7 +144,9 @@ class PW_Controller extends PW_Object
 	public function on_settings_page()
 	{
 		$this->_styles = array_merge( (array) $this->_styles, $this->settings_styles() );
-		$this->_scripts = array_merge( (array) $this->_scripts, $this->settings_scripts() );	
+		$this->_scripts = array_merge( (array) $this->_scripts, $this->settings_scripts() );
+		
+		
 	}
 	
 
@@ -296,7 +304,7 @@ class PW_Controller extends PW_Object
 	protected function settings_scripts() 
 	{
 		return array(
-			array( 'pw-ajax-validation', PW_FRAMEWORK_URL . '/js/ajax-validation.js', 'jquery', false, true ),			
+			array( 'pw-ajax-validation', PW_FRAMEWORK_URL . '/js/ajax-validation.js', array('jquery','json2'), false, true ),			
 		);
 	}
 	

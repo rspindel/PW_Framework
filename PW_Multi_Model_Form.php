@@ -45,7 +45,7 @@ class PW_Multi_Model_Form extends PW_Form
 																			
 			$atts = $this->_model->instance == $id ? array('class'=>'selected') : array();
 			$atts['href'] = $this->model->controller->admin_page . '?page='. $this->model->name . '&_instance=' . $id;
-			$content = $instance['slug'];
+			$content = $instance['name'];
 
 			$tabs[] = PW_HTML::tag('a', $content, $atts);
 		}
@@ -59,8 +59,8 @@ class PW_Multi_Model_Form extends PW_Form
 		
 		// create the header
 		if ($this->_model->instance) {
-			$title = ZC::r('.model-title', $this->_model->singular_title . ZC::r('span.model-subtitle', " ({$instances[$this->_model->instance]['slug']})") );
-			$subtitle = ZC::r('.model-subtext', 'Use the above slug to reference this ' . $this->_model->singular_title . ' instance in widgets, shortcode, or function calls.');
+			$title = ZC::r('.model-title', $this->_model->singular_title . ZC::r('span.model-subtitle', " ({$instances[$this->_model->instance]['name']})") );
+			$subtitle = ZC::r('.model-subtext', 'Use the above name to reference this ' . $this->_model->singular_title . ' instance in widgets, shortcode, or function calls.');
 			$output .= ZC::r('.header', $title . $subtitle);
 		} else {
 			$output.= ZC::r('.header>.model-title', 'Create New ' . $this->_model->singular_title );

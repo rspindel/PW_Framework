@@ -231,7 +231,7 @@ class PW_Form extends PW_Object
 	 * @return string The generated HTML markup
 	 * @since 1.0
 	 */
-	public function checkbox_list( $property, $separator, $atts=array(), $extra = '' )
+	public function checkbox_list( $property, $separator = '<br />', $atts=array(), $extra = '' )
 	{
 		extract( $this->get_field_data_from_model($property) ); // returns $error, $label, $name, $value, $id
 		$field = PW_HTML::checkbox_list( $name, $options, $value, $separator, $atts);

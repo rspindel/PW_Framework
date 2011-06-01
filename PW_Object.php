@@ -19,7 +19,7 @@ class PW_Object
 	 * @see getAttribute
 	 */
 	public function __get($name)
-	{	
+	{			
 		if ( property_exists($this, "_" . $name) ) {
 			return $this->{"_" . $name};
 		}

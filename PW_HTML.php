@@ -108,9 +108,7 @@ class PW_HTML
 			$item_atts = $atts;
 			$item_atts['id'] = $label_atts['for'] = self::get_id_from_name($name) . '_' . $item_index++;
 			$item_atts['value'] = $item_value;
-			if ( in_array( (string) $item_value, (array) $selected) ) {				
-				var_dump( (array) $selected );
-				print_r( (array) $selected );
+			if ( in_array( (string) $item_value, (array) $selected) ) {
 				$item_atts['checked'] = 'checked';
 			}
 			$temp_items[] = str_replace(

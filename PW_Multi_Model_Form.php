@@ -63,7 +63,7 @@ class PW_Multi_Model_Form extends PW_Form
 			$subtitle = ZC::r('.model-subtext', 'Use the above name to reference this ' . $this->_model->singular_title . ' instance in widgets, shortcode, or function calls.');
 			$output .= ZC::r('.header', $title . $subtitle);
 		} else {
-			$output.= ZC::r('.header>.model-title', 'Create New ' . $this->_model->singular_title );
+			$output.= ZC::r('.header>.model-title', 'Create New Instance' ); // ' . $this->_model->singular_title );
 		}
 		
 		// open the body tag

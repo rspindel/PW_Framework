@@ -8,7 +8,7 @@ class PW_Framework
 	 * Used to only load the latest version if multiple versions are found
 	 * @since 1.0
 	 */
-	public static $version = "1.0";
+	public static $version = "1.2";
 	
 	/**
 	 * @var array A list of framework files. Make sure each classname

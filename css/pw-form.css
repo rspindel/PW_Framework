@@ -41,6 +41,7 @@
 .pw-form select { margin-right:3px; }
 .pw-form input+label,
 .pw-form select+label { margin-left:3px; }
+.pw-form label+span.description { display:block; }
 
 /* errors */
 .pw-form .pw-error input[type="text"],

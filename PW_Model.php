@@ -204,8 +204,7 @@ class PW_Model extends PW_Object
 	{
 		if ( $this->validate($input) ) {
 			$this->_errors = array();
-			$this->_option = $this->merge_with_defaults( $input );
-			update_option( $this->_name, $this->_option);
+			$this->update_option( $input );
 			PW_Alerts::add('updated', '<p><strong>Settings Saved</strong></p>' );				
 			return true;
 		}
@@ -234,6 +233,18 @@ class PW_Model extends PW_Object
 			add_option( $this->_name, $this->_option = $this->defaults(), '', $this->_autoload );
 			return $this->_option;
 		}
+	}
+	
+	/**
+	 * Updates the option in the database and performs any required logic beforhand
+	 * @param mixed $option The new option value
+	 * @since 1.0
+	 */
+	public function update_option( $option )
+	{
+		// merge with defaults again just in case
+		$this->_option = $this->merge_with_defaults( $option );
+		update_option( $this->_name, $this->_option );
 	}
 	
 	

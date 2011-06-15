@@ -120,13 +120,8 @@ class PW_Multi_Model extends PW_Model
 				
 				// set the instance ID and increment the auto_id
 				$instance = $_POST['_instance'] == 0 ? $this->_option['auto_id']++ : $_POST['_instance'];				
-
 				$this->_option[$instance] = $input;
-				
-				// merge with defaults again in case the form didn't sumbit all values
-				$this->_option = $this->merge_with_defaults($this->_option);
-				
-				update_option( $this->_name, $this->_option );
+				$this->update_option($this->_option);
 				PW_Alerts::add('updated', '<p><strong>Settings Saved</strong></p>' );				
 				return true;
 			}

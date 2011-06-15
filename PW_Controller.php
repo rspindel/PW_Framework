@@ -91,9 +91,7 @@ class PW_Controller extends PW_Object
 		} else {
 			add_action( 'wp_enqueue_scripts', array($this, 'enqueue_scripts') );
 			add_action( 'wp_print_styles', array($this, 'print_styles') );
-		}
-		
-		
+		}	
 	}
 	
 	/**

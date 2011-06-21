@@ -77,24 +77,6 @@ class PW_Controller extends PW_Object
 		}	
 	}
 	
-	/**
-	 * @see parent
-	 * @since 0.1
-	 */
-	public function __set( $name, $value )
-	{
-		// If we're setting the model, make sure to set $this as the controller in the passed model object
-		if ( 'model' == $name ) {
-			$this->_model = $value;
-			$value->controller = $this;
-			
-			// add the action for the ajax validation request
-			add_action( 'wp_ajax_pw-ajax-validate', array($this->_model, 'validate' ) );
-			
-		} else {
-			parent::__set( $name, $value );
-		}
-	}
 
 	/**
 	 * This method is called from the init hook on any admin page
@@ -121,7 +103,11 @@ class PW_Controller extends PW_Object
 		add_action( 'admin_enqueue_scripts', array($this, 'enqueue_scripts') );
 		add_action( 'admin_print_styles', array($this, 'print_styles') );
 		
-		// register the admin scripts and styles
+		// Add the hook for ajax validation.
+		// This needs to be here because the settings page isn't created on ajax requests.
+		add_action( 'wp_ajax_pw-ajax-validate', array($this->_model, 'validate' ) );
+		
+		// Register the admin scripts and styles
 		$this->_styles = array_merge( (array) $this->_styles, $this->admin_styles() );
 		$this->_scripts = array_merge( (array) $this->_scripts, $this->admin_scripts() );
 	}
@@ -135,7 +121,10 @@ class PW_Controller extends PW_Object
 	{
 		// register the settings page scripts and styles
 		$this->_styles = array_merge( (array) $this->_styles, $this->settings_styles() );
-		$this->_scripts = array_merge( (array) $this->_scripts, $this->settings_scripts() );	
+		$this->_scripts = array_merge( (array) $this->_scripts, $this->settings_scripts() );
+		
+		// add the action for the ajax validation request
+		// add_action( 'wp_ajax_pw-ajax-validate', array($this->_model, 'validate' ) );	
 	}
 	
 

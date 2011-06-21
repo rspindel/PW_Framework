@@ -82,13 +82,6 @@ class PW_Model extends PW_Object
 	 */
 	protected $_autoload = 'yes';
 
-	
-	/**
-	 * @var string The controller associated with this model
-	 */
-	protected $_controller;
-
-
 	/**
 	 * Associate the option with this model instance. If the option doesn't exist, create it
 	 * @since 0.1

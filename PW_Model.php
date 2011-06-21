@@ -57,10 +57,17 @@ class PW_Model extends PW_Object
 	
 	
 	/**
+	 * @var string The admin page where the settings form will be rendered
+	 * @since 0.1
+	 */
+	protected $_admin_page = 'options-general.php'; // use 'themes.php' for theme options
+	
+	
+	/**
 	 * The user capability required to edit this model's option
 	 * @since 0.1
 	 */
-	protected $_capability = 'manage_options';
+	protected $_capability = 'manage_options'; // use 'edit_theme_options' for theme options
 		
 	/**
 	 * An array of validation errors if any exist

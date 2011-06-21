@@ -44,7 +44,7 @@ class PW_Multi_Model_Form extends PW_Form
 			}
 																			
 			$atts = $this->_model->instance == $id ? array('class'=>'selected') : array();
-			$atts['href'] = $this->model->controller->admin_page . '?page='. $this->model->name . '&_instance=' . $id;
+			$atts['href'] = $this->_model->admin_page . '?page='. $this->model->name . '&_instance=' . $id;
 			$content = $instance['name'];
 
 			$tabs[] = PW_HTML::tag('a', $content, $atts);
@@ -52,7 +52,7 @@ class PW_Multi_Model_Form extends PW_Form
 		
 		// create the [+] tab
 		$atts = 0 == $this->_model->instance ? array('class'=>'selected') : array();
-		$atts['href'] =  $this->model->controller->admin_page . '?page='. $this->model->name;
+		$atts['href'] =  $this->_model->admin_page . '?page='. $this->model->name;
 		$tabs[] = PW_HTML::tag('a', '+', $atts);
 		
 		$output .= ZC::r('ul.tabs>li*' . count($tabs), $tabs);

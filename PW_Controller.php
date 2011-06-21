@@ -16,12 +16,6 @@
 class PW_Controller extends PW_Object
 {
 	/**
-	 * @var string The admin page where the settings form will be rendered
-	 * @since 0.1
-	 */
-	protected $_admin_page = 'options-general.php';
-
-	/**
 	 * @var PW_Model the currently loaded model instance.
 	 * @since 0.1
 	 */
@@ -156,19 +150,7 @@ class PW_Controller extends PW_Object
 		// add a filter that adds a "settings" link when viewing this plugin in the plugins list
 		add_filter( 'plugin_action_links_' . $this->_plugin_file , array($this, 'add_settings_link' ) );		
 	}
-	
-	
-	/**
-	 * Creates the action hook necessary to add a theme options submenu page
-	 * @since 0.1
-	 */
-	public function create_theme_options_page() 
-	{				
-		$this->_admin_page = 'themes.php';
-		$this->model->capabilities = 'edit_theme_options';
-		add_action( 'admin_menu', array($this, 'add_submenu_page') );		
-	}
-	
+
 	
 	/**
 	 * Creates an options page for this controller's model using $this->_submnu
@@ -178,7 +160,7 @@ class PW_Controller extends PW_Object
 	public function add_submenu_page()
 	{		
 		// add the settings page and store it in a variable
-		$submenu = add_submenu_page( $this->_admin_page, $this->_model->title, $this->_model->title, $this->_model->capability, $this->_model->name, array($this, 'render_submenu_page') );
+		$submenu = add_submenu_page( $this->_model->admin_page, $this->_model->title, $this->_model->title, $this->_model->capability, $this->_model->name, array($this, 'render_submenu_page') );
 		
 		// add contextual help to the settings page if it's specified in the model
 		if ($this->model->help) {
@@ -187,7 +169,6 @@ class PW_Controller extends PW_Object
 		
 		// add a hook to run only when we're on the settings page
 		add_action( 'load-' . $submenu, array($this, 'on_settings_page') );
-		
 	}
 	
 	/**

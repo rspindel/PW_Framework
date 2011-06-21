@@ -134,7 +134,8 @@ class ZC
 	 * Calls self::r() and echos the result instead of returning it
 	 */
 	public static function e() {
-		echo call_user_func_array( array('ZC', 'r'), func_get_args() );
+		$args = func_get_args();
+		echo call_user_func_array( array('ZC', 'r'), $args );
 	}
 
 

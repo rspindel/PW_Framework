@@ -5,7 +5,7 @@
  * A collection of predefined, static validation methods
  *
  * @package PW_Framework
- * @since 1.0
+ * @since 0.1
  */
 
 
@@ -15,7 +15,7 @@ class PW_Validator
 	 * Returns an error message if email is invalid, otherwise returns nothing
 	 * @param sring $input The value to validate
 	 * @return string (only if invalid)
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	public static function email( $input )
 	{
@@ -35,7 +35,7 @@ class PW_Validator
 	 * @param string $input The value to validate
 	 * @param array $haystack And array that must contain the value $input
 	 * @return string (only if invalid)
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	public static function in_array( $input, $haystack )
 	{
@@ -50,12 +50,14 @@ class PW_Validator
 	 * @param string $input The value to validate
 	 * @param array $pattern The regulat expression the input should match
 	 * @return string (only if invalid)
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	public static function match( $input, $pattern )
 	{
+		
+		
 		if ( $pattern && !preg_match($pattern, $input) ) {
-			return 'Invalid value for {property}';
+			return $input . 'Invalid value for {property}';
 		}
 	}
 	
@@ -63,7 +65,7 @@ class PW_Validator
 	 * Returns an error message if $input is empty, otherwise returns nothing
 	 * @param sring $input The value to validate
 	 * @return string (only if invalid)
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	public static function required( $input, $args = null  )
 	{

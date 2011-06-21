@@ -9,7 +9,7 @@
  * 2) Adds error messages for any validation errors that are found
  *
  * @package PW_Framework
- * @since 1.0
+ * @since 0.1
  */
 
 class PW_Multi_Model_Form extends PW_Form
@@ -17,7 +17,7 @@ class PW_Multi_Model_Form extends PW_Form
 
 	/**
 	 * @see parent
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	public function __construct( $model )
 	{
@@ -26,7 +26,7 @@ class PW_Multi_Model_Form extends PW_Form
 
 	/**
 	 * @see parent
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	public function begin_form( $atts = array() )
 	{	
@@ -59,11 +59,13 @@ class PW_Multi_Model_Form extends PW_Form
 		
 		// create the header
 		if ($this->_model->instance) {
-			$title = ZC::r('.model-title', $this->_model->singular_title . ZC::r('span.model-subtitle', " ({$instances[$this->_model->instance]['name']})") );
+			$title = ZC::r('.model-title', $instances[$this->_model->instance]['name']);
 			$subtitle = ZC::r('.model-subtext', 'Use the above name to reference this ' . $this->_model->singular_title . ' instance in widgets, shortcode, or function calls.');
 			$output .= ZC::r('.header', $title . $subtitle);
 		} else {
-			$output.= ZC::r('.header>.model-title', 'Create New Instance' ); // ' . $this->_model->singular_title );
+			$title = ZC::r('.model-title', 'Create New Instance' );
+			$subtitle = ZC::r('.model-subtext', 'Click "HELP" in the upper right corner of your screen for instructions.');
+			$output .= ZC::r('.header', $title . $subtitle);
 		}
 		
 		// open the body tag
@@ -74,7 +76,7 @@ class PW_Multi_Model_Form extends PW_Form
 	
 	/**
 	 * @see parent
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	public function end_form()
 	{
@@ -87,22 +89,25 @@ class PW_Multi_Model_Form extends PW_Form
 	/**
 	 * Create the markup for the Create/Update and Delete buttons
 	 * @return string The rendered HTML markup
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	protected function render_buttons()
 	{
 		$output = ZC::r('input.button-primary{%1}', array('type'=>'submit', 'value'=> $this->_model->instance ? "Update" : "Create") , null);
 		
+		$instances = $this->_model->get_option();
+		$instance = $instances[$this->_model->instance];
+		
 		if ( 0 != $this->_model->instance ) {
 			$delete_url = wp_nonce_url( add_query_arg('delete_instance', '1'), 'delete_instance' );
-			$output .= ZC::r('a.submitdelete[href="' . $delete_url .'"]', 'Delete ' . $this->_model->singular_title );	
+			$output .= ZC::r('a.submitdelete[href="' . $delete_url .'"]', 'Delete ' . $instance['name'] );	
 		}
 		return $output;		
 	}
 
 	/**
 	 * @see parent
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	protected function get_field_data_from_model( $property )
 	{		

@@ -5,7 +5,7 @@
  * A global class to define variables 
  *
  * @package PW_Framework
- * @since 1.0
+ * @since 0.1
  */
 
 class PW

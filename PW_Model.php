@@ -9,21 +9,21 @@
  * 2) Adding validation rules
  *
  * @package PW_Framework
- * @since 1.0
+ * @since 0.1
  */
 
 class PW_Model extends PW_Object
 {
 	/**
 	 * If a form was submitted, this will be the value of the submitted option data
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	protected $_input = array();
 	
 	
 	/**
 	 * Whether or option data was just updated
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	protected $_updated = false;
 	
@@ -31,39 +31,47 @@ class PW_Model extends PW_Object
 	/**
 	 * The title of this model
 	 * This value is used as the default value for both the options page heading and nav menu text
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	protected $_title = '';
 	
 	/**
 	 * The name of the option in the options table
 	 * This value must be overridden in a subclass.
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	protected $_name = '';
 	
 	/**
 	 * The current value of the option parsed against the default value
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	protected $_option = array();
 	
+	
+	/**
+	 * @var string HTML content for the contextual help section on a settings page
+	 * @since 0.1
+	 */
+	protected $_help;
+	
+	
 	/**
 	 * The user capability required to edit this model's option
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	protected $_capability = 'manage_options';
 		
 	/**
 	 * An array of validation errors if any exist
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	protected $_errors = array();
 	
 	/**
 	 * Whether or not the option should be stored as autoload, defaults to 'yes'
 	 * @var string 'yes' or 'no'
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	protected $_autoload = 'yes';
 
@@ -76,7 +84,7 @@ class PW_Model extends PW_Object
 
 	/**
 	 * Associate the option with this model instance. If the option doesn't exist, create it
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	public function __construct()
 	{
@@ -96,7 +104,7 @@ class PW_Model extends PW_Object
 	
 	/**
 	 * @see parent
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	public function __get( $name )
 	{
@@ -113,7 +121,7 @@ class PW_Model extends PW_Object
 	 * Adds an error
 	 * @param string $property The option property name
 	 * @param string $message The error message
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	public function add_error( $property, $message )
 	{
@@ -129,7 +137,7 @@ class PW_Model extends PW_Object
 	 * Validates the option against the validation rules returned by $this->rules()
 	 * @param array $option of option to be validated.
 	 * @return array The default properties and values
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	public function validate($input = array(), $validate_all = true)
 	{
@@ -177,7 +185,7 @@ class PW_Model extends PW_Object
 		}
 		
 		// Add an alert for any errors
-		if ( $this->errors && !$is_ajax ) {
+		if ( $this->_errors && !$is_ajax ) {
 			PW_Alerts::add(
 				'error',
 				'<p><strong>Please fix the following errors and trying submitting again.</strong></p>' . ZC::r('ul>li*' . count($this->errors), array_values($this->errors) ) ,
@@ -198,7 +206,7 @@ class PW_Model extends PW_Object
 	 * Save the option to the database if (and only if) the option passes validation
 	 * @param array $option The option value to store
 	 * @return boolean Whether or not the option was successfully saved
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	public function save( $input )
 	{
@@ -216,7 +224,7 @@ class PW_Model extends PW_Object
 	/**
 	 * if the option is already stored in the database, get it and merge it with the defaults;
 	 * otherwise, store the defaults
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	public function get_option()
 	{
@@ -238,7 +246,7 @@ class PW_Model extends PW_Object
 	/**
 	 * Updates the option in the database and performs any required logic beforhand
 	 * @param mixed $option The new option value
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	public function update_option( $option )
 	{
@@ -252,7 +260,7 @@ class PW_Model extends PW_Object
 	 * Return the properties label
 	 * @param string $property The option property
 	 * @return string The label of the property from the data array
-	 * @since 1.0
+	 * @since 0.1
 	 */	
 	public function get_label( $property )
 	{
@@ -266,7 +274,7 @@ class PW_Model extends PW_Object
 	/**
 	 * Returns an array specifying the default option property values
 	 * @return array The default property values (ex: array( $property => $value ))
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	protected function defaults()
 	{
@@ -283,7 +291,7 @@ class PW_Model extends PW_Object
 	 * Returns a multi-dimensional array of the label, description, and default value of each property
 	 * HTML characters are allowed within the label and description strings
 	 * @return array The property labels
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	protected function data()
 	{
@@ -315,7 +323,7 @@ class PW_Model extends PW_Object
 	 * 3) 'message' => (optional) a custom message to override the default one (use {property} to refer to that property's label value)
 	 * 4) '...' => (optional) Addition key-value pairs that will be passed to the callback function (order matters!)
 	 * @return array The validation rules
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	protected function rules()
 	{
@@ -341,12 +349,12 @@ class PW_Model extends PW_Object
 		*/
 		return array();
 	}
-	
+		
 	/**
 	 * Merges an option with the defaults from self::defaults(). The default uses wp_parse_args()
 	 * Override in a child class for custom merging.
 	 * @return array The merged option
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	protected function merge_with_defaults( $option )
 	{
@@ -357,7 +365,7 @@ class PW_Model extends PW_Object
 	 * List any properties that should be readonly
 	 * Call array_merge() with parent::readonly() when subclassing to add more values
 	 * @return array A list of properties the magic method __set() can't access
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	protected function readonly()
 	{ 

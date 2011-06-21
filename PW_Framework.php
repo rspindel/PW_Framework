@@ -6,13 +6,13 @@ class PW_Framework
 	/**
 	 * @var string This version of the framework.
 	 * Used to only load the latest version if multiple versions are found
-	 * @since 1.0
+	 * @since 0.1
 	 */
-	public static $version = "1.2";
+	public static $version = "0.1";
 	
 	/**
 	 * @var array A list of framework files. Make sure each classname
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	public static $files = array(
 		'PW' => 'PW.php',
@@ -31,7 +31,7 @@ class PW_Framework
 	/**
 	 * Define constants for framework directory and URL paths
 	 * Also includes all the framework classes
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	public static function init()
 	{	

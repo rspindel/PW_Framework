@@ -9,7 +9,7 @@
  * 2) Processes and displays alert messages
  *
  * @package PW_Framework
- * @since 1.0
+ * @since 0.1
  */
 
 class PW_Alerts
@@ -17,7 +17,7 @@ class PW_Alerts
 	/**
 	 * Stores the alerts to prevent constant database calls
 	 * @var array
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	private static $_alerts;
 	
@@ -26,7 +26,7 @@ class PW_Alerts
 	 * Adds an alert
 	 * @param string $name The key in the option array
 	 * @return mixed property value
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	public static function add( $type, $message, $priority = 10 )
 	{
@@ -42,7 +42,7 @@ class PW_Alerts
 	
 	/**
 	 * Echos the list of alerts
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	public static function render()
 	{
@@ -67,7 +67,7 @@ class PW_Alerts
 	 * Gets the alerts from the database and stores them in self::$_alerts
 	 * If alerts already exists, don't make unnecessary database requests
 	 * @return int -1 if $a < $b, 0 if $a == $b, 1 if $a > $b
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	private static function get_alerts() {
 		if ( empty(self::$_alerts) ) {
@@ -79,7 +79,7 @@ class PW_Alerts
 	/**
 	 * Compares the priority of two alerts; used to sort them in self::render()
 	 * @return int -1 if $a < $b, 0 if $a == $b, 1 if $a > $b
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	private static function compare( $a, $b ) {
 		if ( $a['priority'] == $b['priority'] ) {

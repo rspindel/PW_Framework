@@ -5,7 +5,7 @@
  * An HTML helper class for programmatically creating markup
  *
  * @package PW_Framework
- * @since 1.0
+ * @since 0.1
  */
 
 class PW_HTML
@@ -14,7 +14,7 @@ class PW_HTML
 	 * Converts a name attribute (ex: Post[author][name]) into a unique ID
 	 * @param string $name the name attribute for a form field
 	 * @return string the generated id attribute value
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	public static function get_id_from_name($name)
 	{
@@ -28,7 +28,7 @@ class PW_HTML
 	 * @param string $text The HTML markup placed between the tags. Pass '' to produce <p></p> and null to produce <p />
 	 * @param array $atts An optional array (keyed: property=>value) of additional HTML attributes
 	 * @return string The generated HTML markup
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	public static function tag($name, $text='', $atts=array())
 	{		
@@ -64,7 +64,7 @@ class PW_HTML
 	 * @param array $atts @see self::tag() for details
 	 * @param string $unchecked_value An optional default value in case the box is left unchecked
 	 * @return string The generated HTML markup
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	public static function checkbox( $name, $selected, $atts=array(), $unchecked_value=null )
 	{	
@@ -91,7 +91,7 @@ class PW_HTML
 	 * @param string $template Indicates how each radio button and label will be displayed (use: {input} and {label})
 	 * @param array $label_atts similar to $atts, but applied to the label element
 	 * @return string The generated HTML markup
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	public static function checkbox_list($name, $items, $selected, $separator = '', $atts=array(), $template='{input}{label}', $label_atts=array() )
 	{
@@ -127,7 +127,7 @@ class PW_HTML
 	 * @param string $for The for attribute
 	 * @param array $atts @see self::tag() for details
 	 * @return string The generated HTML markup
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	public static function label($text = '', $for = null, $atts = array())
 	{
@@ -144,7 +144,7 @@ class PW_HTML
 	 * @param string $text @see self::tag() for details
 	 * @param array $atts @see self::tag() for details
 	 * @return string The generated HTML markup
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	public static function link($href = '', $text = '', $atts = array())
 	{
@@ -158,7 +158,7 @@ class PW_HTML
 	 * @param string $name The name attribute
 	 * @param array $atts @see self::tag() for details
 	 * @return string The generated HTML markup
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	public static function password( $name = '', $atts = array() )
 	{
@@ -179,7 +179,7 @@ class PW_HTML
 	 * @param string $template Indicates how each radio button and label will be displayed (use: {input} and {label})
 	 * @param array $label_atts similar to $atts, but applied to the label element
 	 * @return string The generated HTML markup
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	public static function radio_button_list($name, $items, $selected, $separator = '', $atts = array(), $template = '{input}{label}', $label_atts = array() )
 	{
@@ -213,7 +213,7 @@ class PW_HTML
 	 * @param string $selected The value of the selected option (checked against value in items array)
 	 * @param array $atts @see self::tag() for details
 	 * @return string The generated HTML markup
-	 * @since 1.0
+	 * @since 0.1
 	 */	
 	public static function select($name, $items, $selected, $atts = array())
 	{
@@ -237,7 +237,7 @@ class PW_HTML
 	 * @param string $text The default text content
 	 * @param array $atts @see self::tag() for details
 	 * @return string The generated HTML markup
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	public static function textfield( $name = '', $text = '', $atts=array() )
 	{

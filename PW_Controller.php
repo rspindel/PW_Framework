@@ -9,7 +9,7 @@
  * 2) Creates a model object and collects form input data to write back to it
  *
  * @package PW_Framework
- * @since 1.0
+ * @since 0.1
  */
 
 
@@ -17,66 +17,61 @@ class PW_Controller extends PW_Object
 {
 	/**
 	 * @var string The admin page where the settings form will be rendered
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	protected $_admin_page = 'options-general.php';
 
 	/**
 	 * @var PW_Model the currently loaded model instance.
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	protected $_model;
 	
 	/**
 	 * @var string The file path of this plugin's main script
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	protected $_plugin_file;
 
 	/**
 	 * @var array An array of scripts to be added in the appropriate hook
 	 * This array should start every page load empty. Scripts should be added based on conditions
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	protected $_scripts;
 
 	/**
 	 * @var array An array of styles to be added in the appropriate hook
 	 * This array should start every page load empty. Styles should be added based on conditions
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	protected $_styles;
 
 	/**
 	 * @var array The submenu page data
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	protected $_submenu;	
 
 	/**
 	 * @var PW_View the currently loaded view instance.
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	protected $_view;
 	
 	/**
 	 * @var array An array of additional data you want to pass to the view
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	protected $_view_data;
 	
 	/**
 	 * The controller constructor.
 	 * @param string $plugin_file The plugin's main php file
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	public function __construct()
-	{			
-		if ( empty($this->_plugin_file) ) {
-			$debug = debug_backtrace();
-			$this->_plugin_file = plugin_basename($debug[0]['file']);
-		}
-		
+	{					
 		// add action hook for public and/or admin pages
 		if ( is_admin() ) {
 			add_action( 'admin_init', array($this, 'on_admin_page') );
@@ -96,7 +91,7 @@ class PW_Controller extends PW_Object
 	
 	/**
 	 * @see parent
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	public function __set( $name, $value )
 	{
@@ -115,7 +110,7 @@ class PW_Controller extends PW_Object
 
 	/**
 	 * This method is called from the init hook on any admin page
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	public function on_public_page()
 	{
@@ -126,7 +121,7 @@ class PW_Controller extends PW_Object
 
 	/**
 	 * This method is called from the admin_init hook on any admin page
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	public function on_admin_page()
 	{
@@ -137,7 +132,7 @@ class PW_Controller extends PW_Object
 	/**
 	 * This method is only called if you've added a settings page via create_settings_page()
 	 * and the user is currently on that page.
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	public function on_settings_page()
 	{
@@ -150,7 +145,7 @@ class PW_Controller extends PW_Object
 
 	/**
 	 * Creates the action hook necessary to add a settings submenu page
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	public function create_settings_page() 
 	{				
@@ -163,7 +158,7 @@ class PW_Controller extends PW_Object
 	
 	/**
 	 * Creates the action hook necessary to add a theme options submenu page
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	public function create_theme_options_page() 
 	{				
@@ -176,13 +171,18 @@ class PW_Controller extends PW_Object
 	/**
 	 * Creates an options page for this controller's model using $this->_submnu
 	 * this is the callback from the 'admin_menu' hook set in self::add_options_page() 
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	public function add_submenu_page()
 	{		
 		// add the settings page and store it in a variable
 		$submenu = add_submenu_page( $this->_admin_page, $this->_model->title, $this->_model->title, $this->_model->capability, $this->_model->name, array($this, 'render_submenu_page') );
-				
+		
+		// add contextual help to the settings page if it's specified in the model
+		if ($this->model->help) {
+			add_contextual_help( $submenu, $this->model->help );
+		}
+		
 		// add a hook to run only when we're on the settings page
 		add_action( 'load-' . $submenu, array($this, 'on_settings_page') );
 		
@@ -191,7 +191,7 @@ class PW_Controller extends PW_Object
 	/**
 	 * Add settings link on plugin page. Called from add_filter('plugin_action_links_[...]') in self::create_settings_page()
 	 * @return array The new list of links for the plugin on the plugins list page
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	public function add_settings_link( $links )
 	{		
@@ -203,7 +203,7 @@ class PW_Controller extends PW_Object
 	/**
 	 * This default callback for add_submenu_page()
 	 * Override this function in a subclass to change the default rendering functionality
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	public function render_submenu_page()
 	{
@@ -224,7 +224,7 @@ class PW_Controller extends PW_Object
 	 * @param string $file The view file (defaults to this controller's view)
 	 * @param array $vars An array variables to extract and pass to the view file
 	 * @param boolean $output Set as false to return as a string
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	public function render( $vars = array(), $file = null, $output = true )
 	{
@@ -247,7 +247,7 @@ class PW_Controller extends PW_Object
 	/**
 	 * Override to specify any styles that should appear on all public pages when this plugin is active
 	 * @return array A list of arrays in the form array( $handle, $src, $deps, $ver, $media) {@link http://codex.wordpress.org/Function_Reference/wp_enqueue_style}
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	protected function public_styles() {
 		return array();
@@ -256,7 +256,7 @@ class PW_Controller extends PW_Object
 	/**
 	 * Override to specify any styles that should appear on all admin pages when this plugin is active
 	 * @return array A list of arrays in the form array( $handle, $src, $deps, $ver, $media ) {@link http://codex.wordpress.org/Function_Reference/wp_enqueue_style}
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	protected function admin_styles() {
 		return array();
@@ -266,7 +266,7 @@ class PW_Controller extends PW_Object
 	 * Override to specify any styles that should appear only on this plugin's settings page.
 	 * defaults to the pw-form stylesheet
 	 * @return array A list of arrays in the form array( $handle, $src, $deps, $ver, $media ) {@link http://codex.wordpress.org/Function_Reference/wp_enqueue_style}
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	protected function settings_styles() {
 		return array(
@@ -277,7 +277,7 @@ class PW_Controller extends PW_Object
 	/**
 	 * Override to specify any scripts that should be loaded on all public pages when this plugin is active
 	 * @return array A list of arrays in the form array( $handle, $src, $deps, $ver, $in_footer ) {@link http://codex.wordpress.org/Function_Reference/wp_enqueue_script}
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	protected function public_scripts()
 	{
@@ -287,7 +287,7 @@ class PW_Controller extends PW_Object
 	/**
 	 * Override to specify any scripts that should be loaded on all admin pages when this plugin is active
 	 * @return array A list of arrays in the form array( $handle, $src, $deps, $ver, $in_footer ) {@link http://codex.wordpress.org/Function_Reference/wp_enqueue_script}
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	protected function admin_scripts()
 	{
@@ -297,7 +297,7 @@ class PW_Controller extends PW_Object
 	/**
 	 * Override to specify any scripts that should be loaded only on this plugin's settings page.
 	 * @return array A list of arrays in the form array( $handle, $src, $deps, $ver, $in_footer ) {@link http://codex.wordpress.org/Function_Reference/wp_enqueue_script}
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	protected function settings_scripts() 
 	{
@@ -310,7 +310,7 @@ class PW_Controller extends PW_Object
 	/**
 	 * Enqueues all the scripts in $this->_scripts.
 	 * Called from either the wp_enqueue_scripts or admin_enqueue_scripts hook
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	public function enqueue_scripts()
 	{
@@ -324,7 +324,7 @@ class PW_Controller extends PW_Object
 	/**
 	 * Prints all the styles in $this->_styles.
 	 * Called from either the wp_print_styles or admin_print_styles hook
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	public function print_styles()
 	{

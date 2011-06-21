@@ -6,7 +6,7 @@
  * Defines the common methods of all PW_Framework objects such as magic methods
  *
  * @package PW_Framework
- * @since 1.0
+ * @since 0.1
  */
 
 class PW_Object
@@ -31,7 +31,7 @@ class PW_Object
 	 * This method is overridden so that object properties can be directly accessed
 	 * @param string $name The key in the option array
 	 * @param mixed $value The value to set
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	public function __set( $name, $value )
 	{
@@ -51,7 +51,7 @@ class PW_Object
 	 * List any properties that should be readonly
 	 * Call array_merge() with parent::readonly() when subclassing to add more values
 	 * @return array A list of properties the magic method __set() can't access
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	protected function readonly()
 	{ 

@@ -9,14 +9,14 @@
  * 2) Adds error messages for any validation errors that are found
  *
  * @package PW_Framework
- * @since 1.0
+ * @since 0.1
  */
 
 class PW_Form extends PW_Object
 {
 	/**
 	 * @var bool Whether or not to use ajax validation on the form
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	protected $_ajax_validation = true;
 	
@@ -24,7 +24,7 @@ class PW_Form extends PW_Object
 	 * @var string The template to create the HTML label/field pairs
 	 * Don't worry about creating extra markup if {extra} or {error} is empty.
 	 * All empty tags are removed before output.
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	protected $_template = '
 		<div class="label">{label}</div>
@@ -38,43 +38,43 @@ class PW_Form extends PW_Object
 
 	/**
 	 * @var string The class applied to the field element if the model contains errors 
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	protected $_error_class = 'pw-error';
 	
 	/**
 	 * @var string The class applied to the actual error message element
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	protected $_error_message_class = 'pw-error-message';
 	
 	/**
 	 * @var string The markup that opens a section
-	 * @since 1.0
+	 * @since 0.1
 	 */
-	protected $_begin_section_template = '<h3>{section_title}</h3>';
+	protected $_begin_section_template = '<h3><strong>{section_title}</strong></h3>';
 
 	/**
 	 * @var string The markup that closes a section
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	protected $_end_section_template = '';
 
 	/**
 	 * @var string The model object associated with this form
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	protected $_model;
 	
 	/**
 	 * Whether or not methods should output or return the generated HTML
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	protected $_echo = true;
 	
 	/**
 	 * @param PW_Model $model The model object associated with this form
-	 * @since 1.0
+	 * @since 0.1
 	 */ 
 	public function __construct( $model )
 	{
@@ -89,7 +89,7 @@ class PW_Form extends PW_Object
 	 * Renders the opening form markup, including the nonce and hidden fields
 	 * @param array $atts Option additional HTML attributes to apply to the form element
 	 * @return string Returns or echos the generated markup
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	public function begin_form( $atts = array() )
 	{
@@ -115,7 +115,7 @@ class PW_Form extends PW_Object
 	/**
 	 * Renders the closing form markup, including the submit/delete buttons
 	 * @return string Returns or echos the generated markup
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	public function end_form()
 	{
@@ -127,7 +127,7 @@ class PW_Form extends PW_Object
 	 * @param string $title The section title
 	 * @param string $desc Optional description text to go below the title
 	 * @return string Returns or echos the generated HTML markup
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	public function begin_section( $title = '', $desc = '' )
 	{
@@ -143,7 +143,7 @@ class PW_Form extends PW_Object
 	/**
 	 * Close out a section
 	 * @return string Returns or echos the generated HTML markup
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	public function end_section()
 	{
@@ -154,7 +154,7 @@ class PW_Form extends PW_Object
 	/**
 	 * Creates the markup for the page title and screen icon
 	 * @return string Returns or echos the generated HTML markup
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	public function render_title()
 	{
@@ -181,7 +181,7 @@ class PW_Form extends PW_Object
 	 * @param string $extra Any extra extra markup
 	 * @param string $error The error markup
 	 * @return string Returns or echos the generated HTML markup
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	public function render_field($label, $field, $desc, $extra, $error)
 	{	
@@ -203,7 +203,7 @@ class PW_Form extends PW_Object
 	 * @param string $unchecked_value An optional default value in case the box is left unchecked
 	 * @param string $extra Any addition markup you want to display after the input element
 	 * @return string The generated HTML markup
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	public function checkbox( $property, $atts=array(), $unchecked_value, $extra = '' )
 	{		
@@ -229,7 +229,7 @@ class PW_Form extends PW_Object
 	 * @param array $atts @see PW_HTML::tag() for details
 	 * @param string $extra Any addition markup you want to display after the input element
 	 * @return string The generated HTML markup
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	public function checkbox_list( $property, $separator = '<br />', $atts=array(), $extra = '' )
 	{
@@ -246,9 +246,9 @@ class PW_Form extends PW_Object
 	 * @param array $atts @see PW_HTML::tag() for details
 	 * @param string $extra Any addition markup you want to display after the input element
 	 * @return string The generated HTML markup
-	 * @since 1.0
+	 * @since 0.1
 	 */
-	public function radio_button_list( $property, $separator, $atts=array(), $extra = '' )
+	public function radio_button_list( $property, $separator = '<br />', $atts=array(), $extra = '' )
 	{
 		extract( $this->get_field_data_from_model($property) ); // returns $error, $label, $name, $value, $id
 		$field = PW_HTML::radio_button_list( $name, $options, $value, $separator, $atts);
@@ -262,7 +262,7 @@ class PW_Form extends PW_Object
 	 * @param array $atts @see PW_HTML::tag() for details
 	 * @param string $extra Any addition markup you want to display after the input element
 	 * @return string The generated HTML markup
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	public function select( $property, $atts=array(), $extra = '' )
 	{
@@ -280,7 +280,7 @@ class PW_Form extends PW_Object
 	 * @param array $atts @see PW_HTML::tag() for details
 	 * @param string $extra Any addition markup you want to display after the input element
 	 * @return string The generated HTML markup
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	public function textfield( $property, $atts=array(), $extra = '' )
 	{
@@ -296,7 +296,7 @@ class PW_Form extends PW_Object
 	/**
 	 * @param string $property The model option property
 	 * @return array An array of the property's id, name (the HTML attribute), label, desc, value, and error (if one exists)
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	protected function get_field_data_from_model( $property )
 	{		
@@ -335,7 +335,7 @@ class PW_Form extends PW_Object
 	 * Either echos $output or returns it as a string based on the value of $this->echo
 	 * @param string $output The HTML to return or echo
 	 * @return string Only if $this->echo == true
-	 * @since 1.0
+	 * @since 0.1
 	 */
 	protected function return_or_echo( $output )
 	{

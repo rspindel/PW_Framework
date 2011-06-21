@@ -41,8 +41,11 @@ class PW_Controller extends PW_Object
 	protected $_scripts;
 
 	/**
-	 * @var array An array of styles to be added in the appropriate hook
-	 * This array should start every page load empty. Styles should be added based on conditions
+	 * An array of styles that will be enqueued.
+	 * Styles in this array are always loaded, regardless of what page your on (admin or public).
+	 * Only add styles to this array after you've conditionally checked to ensure that they should
+	 * be loaded on the current page.
+	 * @var array An array of styles
 	 * @since 0.1
 	 */
 	protected $_styles;
@@ -54,7 +57,7 @@ class PW_Controller extends PW_Object
 	protected $_submenu;	
 
 	/**
-	 * @var PW_View the currently loaded view instance.
+	 * @var string The currently loaded view file.
 	 * @since 0.1
 	 */
 	protected $_view;
@@ -77,15 +80,6 @@ class PW_Controller extends PW_Object
 			add_action( 'admin_init', array($this, 'on_admin_page') );
 		} else {
 			add_action( 'init', array($this, 'on_public_page') );	
-		}
-		
-		// add the action hooks for adding styles and scripts
-		if ( is_admin() ) {
-			add_action( 'admin_enqueue_scripts', array($this, 'enqueue_scripts') );
-			add_action( 'admin_print_styles', array($this, 'print_styles') );			
-		} else {
-			add_action( 'wp_enqueue_scripts', array($this, 'enqueue_scripts') );
-			add_action( 'wp_print_styles', array($this, 'print_styles') );
 		}	
 	}
 	
@@ -114,6 +108,11 @@ class PW_Controller extends PW_Object
 	 */
 	public function on_public_page()
 	{
+		// add the hooks to enqueue the appropriate public scripts and styles
+		add_action( 'wp_enqueue_scripts', array($this, 'enqueue_scripts') );
+		add_action( 'wp_print_styles', array($this, 'print_styles') );
+		
+		// register the public scripts and styles
 		$this->_styles = array_merge( (array) $this->_styles, $this->public_styles() );
 		$this->_scripts = array_merge( (array) $this->_scripts, $this->public_scripts() );
 	}
@@ -125,6 +124,10 @@ class PW_Controller extends PW_Object
 	 */
 	public function on_admin_page()
 	{
+		add_action( 'admin_enqueue_scripts', array($this, 'enqueue_scripts') );
+		add_action( 'admin_print_styles', array($this, 'print_styles') );
+		
+		// register the admin scripts and styles
 		$this->_styles = array_merge( (array) $this->_styles, $this->admin_styles() );
 		$this->_scripts = array_merge( (array) $this->_scripts, $this->admin_scripts() );
 	}
@@ -136,10 +139,9 @@ class PW_Controller extends PW_Object
 	 */
 	public function on_settings_page()
 	{
+		// register the settings page scripts and styles
 		$this->_styles = array_merge( (array) $this->_styles, $this->settings_styles() );
-		$this->_scripts = array_merge( (array) $this->_scripts, $this->settings_scripts() );
-		
-		
+		$this->_scripts = array_merge( (array) $this->_scripts, $this->settings_scripts() );	
 	}
 	
 

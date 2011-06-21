@@ -1,20 +1,20 @@
 <?php
-/*
-Plugin Name: ZC
-Plugin URI: http://philipwalton.com/2011/04/06/zen-coding-for-php-and-wordpress/
-Description:
-Version: 0.1
-Author: Philip Walton
-Author URI: http://philipwalton.com
-*/
-
+/**
+ * ZC
+ *
+ * A helper class to use Zen Coding syntax
+ * {@link http://philipwalton.com/2011/04/06/zen-coding-for-php-and-wordpress}
+ *
+ * @package PW_Framework
+ * @since 0.1
+ */
 
 class ZC
 {	
 	/**
 	 * Expand a css-style selector according to the 'Zen Coding' specifications
 	 * @link http://code.google.com/p/zen-coding/
-	 * @uses this->tag()
+	 * @uses PW_HTML::tag()
 	 *
 	 * @param string $selector a css-style selector based on the Zen Coding' specifications
 	 * @param string|array $innerHTML the contents for the last element in the selector string,

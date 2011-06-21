@@ -16,6 +16,7 @@ class PW_Model extends PW_Object
 {
 	/**
 	 * If a form was submitted, this will be the value of the submitted option data
+	 * @var array The $_POST data of the submitted form
 	 * @since 0.1
 	 */
 	protected $_input = array();
@@ -23,6 +24,7 @@ class PW_Model extends PW_Object
 	
 	/**
 	 * Whether or option data was just updated
+	 * @var bool
 	 * @since 0.1
 	 */
 	protected $_updated = false;
@@ -31,6 +33,7 @@ class PW_Model extends PW_Object
 	/**
 	 * The title of this model
 	 * This value is used as the default value for both the options page heading and nav menu text
+	 * @var string
 	 * @since 0.1
 	 */
 	protected $_title = '';
@@ -38,12 +41,14 @@ class PW_Model extends PW_Object
 	/**
 	 * The name of the option in the options table
 	 * This value must be overridden in a subclass.
+	 * @var string
 	 * @since 0.1
 	 */
 	protected $_name = '';
 	
 	/**
 	 * The current value of the option parsed against the default value
+	 * @var array
 	 * @since 0.1
 	 */
 	protected $_option = array();
@@ -65,12 +70,14 @@ class PW_Model extends PW_Object
 	
 	/**
 	 * The user capability required to edit this model's option
+	 * @var string
 	 * @since 0.1
 	 */
 	protected $_capability = 'manage_options'; // use 'edit_theme_options' for theme options
 		
 	/**
 	 * An array of validation errors if any exist
+	 * @var array
 	 * @since 0.1
 	 */
 	protected $_errors = array();

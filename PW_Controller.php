@@ -107,6 +107,9 @@ class PW_Controller extends PW_Object
 		// This needs to be here because the settings page isn't created on ajax requests.
 		add_action( 'wp_ajax_pw-ajax-validate', array($this->_model, 'validate' ) );
 		
+		// Register the admin_notices hook which calls PW_Alerts
+		add_action( 'admin_notices', array('PW_Alerts', 'render') );		
+				
 		// Register the admin scripts and styles
 		$this->_styles = array_merge( (array) $this->_styles, $this->admin_styles() );
 		$this->_scripts = array_merge( (array) $this->_scripts, $this->admin_scripts() );
@@ -122,9 +125,6 @@ class PW_Controller extends PW_Object
 		// register the settings page scripts and styles
 		$this->_styles = array_merge( (array) $this->_styles, $this->settings_styles() );
 		$this->_scripts = array_merge( (array) $this->_scripts, $this->settings_scripts() );
-		
-		// add the action for the ajax validation request
-		// add_action( 'wp_ajax_pw-ajax-validate', array($this->_model, 'validate' ) );	
 	}
 	
 

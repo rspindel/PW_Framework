@@ -95,7 +95,7 @@ class PW_Form extends PW_Object
 	{
 		$this->render_title();
 				
-		PW_Alerts::render();
+		// PW_Alerts::render();
 		
 		$output = '';
 				

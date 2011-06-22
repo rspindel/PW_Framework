@@ -8,12 +8,8 @@ jQuery(document).ready(function($)
 		$.ajax({
 			type: 'GET',
 			url: ajaxurl,
-			// data: 'action=pw-ajax-validate&' + field.serialize(),
 			data: 'action=' + model + '_form_validate&' + field.serialize(),
-			success: function(response) {
-				
-				console.log(response);
-				
+			success: function(response) {				
 				if (response) {
 					parent = field.parent().addClass('pw-error');
 					errorWrapper = parent.children('.pw-error-message')

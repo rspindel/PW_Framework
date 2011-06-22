@@ -58,27 +58,27 @@ div.error li { font-size:11px; list-style:square; line-height:1em; }
 
 
 /* multi-model */
-#pw-mm-form { display:block;margin-top:20px;padding:26px 0 20px;position:relative; }
+.pw-mm-form { display:block;margin-top:20px;padding:26px 0 20px;position:relative; }
 
-#pw-mm-form .tabs {display:block;font-size:12px;line-height:12px;padding-left:20px;position:absolute;top:0px;white-space:nowrap;z-index:1;}
-#pw-mm-form .tabs li{display:inline-block; font-size:11px; line-height:11px; overflow:visible;}
-#pw-mm-form .tabs a{background-color:#F4F4F4;border-color:#DFDFDF #DFDFDF #CCCCCC;border-radius:5px 5px 0 0;-moz-border-radius:5px 5px 0 0;-webkit-border-radius:5px 5px 0 0;border-style:solid;border-width:1px 1px 0;color:#c1c1c1;display:inline-block;margin-right:6px;padding:7px 12px;text-decoration:none;text-shadow:0 1px 0 #FFFFFF;}
-#pw-mm-form .tabs a:hover{color:#D54E21;}
-#pw-mm-form .tabs a.selected{background-color:#ECECEC;border-color:#CCCCCC;color:#464646;font-weight:bold;padding-bottom:8px;}
+.pw-mm-form .tabs {display:block;font-size:12px;line-height:12px;padding-left:20px;position:absolute;top:0px;white-space:nowrap;z-index:1;}
+.pw-mm-form .tabs li{display:inline-block; font-size:11px; line-height:11px; overflow:visible;}
+.pw-mm-form .tabs a{background-color:#F4F4F4;border-color:#DFDFDF #DFDFDF #CCCCCC;border-radius:5px 5px 0 0;-moz-border-radius:5px 5px 0 0;-webkit-border-radius:5px 5px 0 0;border-style:solid;border-width:1px 1px 0;color:#c1c1c1;display:inline-block;margin-right:6px;padding:7px 12px;text-decoration:none;text-shadow:0 1px 0 #FFFFFF;}
+.pw-mm-form .tabs a:hover{color:#D54E21;}
+.pw-mm-form .tabs a.selected{background-color:#ECECEC;border-color:#CCCCCC;color:#464646;font-weight:bold;padding-bottom:8px;}
 
-#pw-mm-form .header { background-color:#ECECEC;border:1px solid #CCCCCC; padding:20px 25px 14px; -moz-border-radius:5px 5px 0 0; -webkit-border-radius:5px 5px 0 0; border-radius:5px 5px 0 0;}
-#pw-mm-form .body{background-color:#FBFBFB; border-left: 1px solid #ccc; border-right:1px solid #ccc; padding:4px 20px 14px;}
-#pw-mm-form .footer{ background-color:#ECECEC;border:1px solid #CCCCCC; padding:14px 20px; -moz-border-radius:0 0 5px 5px; -webkit-border-radius:0 0 5px 5px; border-radius:0 0 5px 5px; }
+.pw-mm-form .header { background-color:#ECECEC;border:1px solid #CCCCCC; padding:20px 25px 14px; -moz-border-radius:5px 5px 0 0; -webkit-border-radius:5px 5px 0 0; border-radius:5px 5px 0 0;}
+.pw-mm-form .body{background-color:#FBFBFB; border-left: 1px solid #ccc; border-right:1px solid #ccc; padding:4px 20px 14px;}
+.pw-mm-form .footer{ background-color:#ECECEC;border:1px solid #CCCCCC; padding:14px 20px; -moz-border-radius:0 0 5px 5px; -webkit-border-radius:0 0 5px 5px; border-radius:0 0 5px 5px; }
 
-#pw-mm-form .controls { border-top:1px dotted #ccc; margin-top:5px; }
-#pw-mm-form .model-title{color:#21759B;display:block;font:italic 20px/24px Georgia,"Times New Roman","Bitstream Charter",Times,serif; }
-#pw-mm-form .model-subtitle { color: #AAA; font-size: .8em; }
-#pw-mm-form .model-subtext { color:#444; font-size:11px; }
+.pw-mm-form .controls { border-top:1px dotted #ccc; margin-top:5px; }
+.pw-mm-form .model-title{color:#21759B;display:block;font:italic 20px/24px Georgia,"Times New Roman","Bitstream Charter",Times,serif; }
+.pw-mm-form .model-subtitle { color: #AAA; font-size: .8em; }
+.pw-mm-form .model-subtext { color:#444; font-size:11px; }
 
-#pw-mm-form h3 { border-bottom:1px solid #FFF; margin:1em 0; }
-#pw-mm-form h3 strong { border-bottom:1px solid #DDD; display:block; font-weight:bold; padding-bottom:6px; }
+.pw-mm-form h3 { border-bottom:1px solid #FFF; margin:1em 0; }
+.pw-mm-form h3 strong { border-bottom:1px solid #DDD; display:block; font-weight:bold; padding-bottom:6px; }
 
-#pw-mm-form .submitdelete { border-bottom:1px solid #F00; color:#F00; font-size:11px; margin-left:10px; padding:2px 3px 1px; text-decoration:none; }
-#pw-mm-form .submitdelete:hover { background-color:#F00; color:#FFF; }
+.pw-mm-form .submitdelete { border-bottom:1px solid #F00; color:#F00; font-size:11px; margin-left:10px; padding:2px 3px 1px; text-decoration:none; }
+.pw-mm-form .submitdelete:hover { background-color:#F00; color:#FFF; }
 
-#pw-mm-form .footer{ background-color:#ECECEC;border:1px solid #CCCCCC; padding:14px 20px; -moz-border-radius:0 0 5px 5px; -webkit-border-radius:0 0 5px 5px; border-radius:0 0 5px 5px; }
+.pw-mm-form .footer{ background-color:#ECECEC;border:1px solid #CCCCCC; padding:14px 20px; -moz-border-radius:0 0 5px 5px; -webkit-border-radius:0 0 5px 5px; border-radius:0 0 5px 5px; }

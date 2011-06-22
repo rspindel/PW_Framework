@@ -1,13 +1,19 @@
 jQuery(document).ready(function($)
 {
+	var model = $("form.pw-form").attr('id');
+	
 	$("form.pw-form input[type=text], form.pw-form input[type=password], form.pw-form textarea").blur( function() {
 
 		var field = $(this);
 		$.ajax({
 			type: 'GET',
 			url: ajaxurl,
-			data: 'action=pw-ajax-validate&' + field.serialize(),
+			// data: 'action=pw-ajax-validate&' + field.serialize(),
+			data: 'action=' + model + '_form_validate&' + field.serialize(),
 			success: function(response) {
+				
+				console.log(response);
+				
 				if (response) {
 					parent = field.parent().addClass('pw-error');
 					errorWrapper = parent.children('.pw-error-message')

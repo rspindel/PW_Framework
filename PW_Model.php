@@ -127,7 +127,7 @@ class PW_Model extends PW_Object
 	 * @since 0.1
 	 */
 	public function validate($input = array(), $validate_all = true)
-	{
+	{		
 		if ( $is_ajax = ( defined('DOING_AJAX') && constant('DOING_AJAX') == true ) ) {
 			if ( isset($_GET[$this->_name]) ) {
 				$input = $_GET[$this->_name];

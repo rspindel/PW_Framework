@@ -30,7 +30,7 @@ class PW_MultiModelForm extends PW_Form
 	 */
 	public function begin_form( $atts = array() )
 	{	
-		$atts['id'] = 'pw-mm-form';
+		$atts['class'] = 'pw-mm-form pw-form';
 		$output = parent::begin_form($atts);
 		$output .= PW_HTML::tag('input', null, array('type'=>'hidden', 'name'=>'_instance', 'value'=>$this->_model->instance) );
 

@@ -156,7 +156,7 @@ class PW_ModelController extends PW_Controller
 		
 		// Add the hook for ajax validation.
 		// This needs to be here because the settings page isn't created on ajax requests.
-		add_action( 'wp_ajax_pw-ajax-validate', array($this->_model, 'validate' ) );
+		add_action( 'wp_ajax_' . $this->_model->name . '_form_validate', array($this->_model, 'validate' ) );
 	}
 
 }

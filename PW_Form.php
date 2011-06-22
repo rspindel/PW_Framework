@@ -98,7 +98,7 @@ class PW_Form extends PW_Object
 		$output = '';
 				
 		// Add only the opening form tag
-		$atts = wp_parse_args( $atts, array('class'=>'pw-form', 'method'=>'post' ) );
+		$atts = wp_parse_args( $atts, array('id'=>$this->_model->name, 'class'=>'pw-form', 'method'=>'post' ) );
 		$output .= str_replace('</form>', '', PW_HTML::tag('form', '', $atts) );
 
 		// Add the hidden fields for _nonce and _wp_http_referrer

@@ -42,6 +42,14 @@ class PW_Controller extends PW_Object
 	 * @since 0.1
 	 */
 	protected $_styles = array();
+	
+	
+	/**
+	 * An array of styles that will be enqueued as conditional IE only stylesheets.
+	 * @var array A list of arrays in the form array( 'condition' => 'lte IE 8', 'style' => array( $handle, $src, $deps, $ver, $media)
+	 * @since 0.1
+	 */
+	protected $_ie_styles = array();
 
 
 	/**
@@ -141,9 +149,17 @@ class PW_Controller extends PW_Object
 	 */
 	public function print_styles()
 	{
+		global $wp_styles;
+		
 		foreach ($this->_styles as $style)
 		{
 			call_user_func_array( 'wp_enqueue_style', $style );
+		}
+		
+		foreach ($this->_ie_styles as $style)
+		{
+			call_user_func_array( 'wp_enqueue_style', $style['style'] );
+			$wp_styles->add_data( $style['style'][0], 'conditional', $style['condition'] );
 		}
 	}
 }

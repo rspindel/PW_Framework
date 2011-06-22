@@ -57,4 +57,10 @@ class PW_MultiModelController extends PW_ModelController
 			}
 		}
 	}
+	
+	public function on_settings_page()
+	{	
+		parent::on_settings_page();
+		$this->_ie_styles[] = array( 'condition'=>'lte IE 8', 'style'=>array( 'pw-form-ie7', PW_FRAMEWORK_URL . '/css/pw-form-ie7.css' ) );
+	}
 }

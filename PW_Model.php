@@ -38,6 +38,7 @@ class PW_Model extends PW_Object
 	 */
 	protected $_title = '';
 	
+	
 	/**
 	 * The name of the option in the options table
 	 * This value must be overridden in a subclass.
@@ -45,6 +46,7 @@ class PW_Model extends PW_Object
 	 * @since 0.1
 	 */
 	protected $_name = '';
+	
 	
 	/**
 	 * The current value of the option parsed against the default value
@@ -74,6 +76,7 @@ class PW_Model extends PW_Object
 	 * @since 0.1
 	 */
 	protected $_capability = 'manage_options'; // use 'edit_theme_options' for theme options
+	
 		
 	/**
 	 * An array of validation errors if any exist
@@ -82,12 +85,14 @@ class PW_Model extends PW_Object
 	 */
 	protected $_errors = array();
 	
+	
 	/**
 	 * Whether or not the option should be stored as autoload, defaults to 'yes'
 	 * @var string 'yes' or 'no'
 	 * @since 0.1
 	 */
 	protected $_autoload = 'yes';
+
 
 	/**
 	 * Associate the option with this model instance. If the option doesn't exist, create it
@@ -96,26 +101,6 @@ class PW_Model extends PW_Object
 	public function __construct()
 	{
 		$this->get_option();
-		
-		// If POST data for this model was submitted, process it
-		if ( isset($_POST[$this->_name])  ) {
-			$this->process_input($_POST[$this->_name]);
-		}
-	}
-	
-	
-	/**
-	 * @see parent
-	 * @since 0.1
-	 */
-	public function __get( $name )
-	{
-		// If we're getting $this->_option, return $this->get_option() instead
-		if ( 'option' == $name ) {
-			return $this->get_option();
-		} else {
-			return parent::__get( $name );
-		}
 	}
 
 	
@@ -133,28 +118,8 @@ class PW_Model extends PW_Object
 			$this->_errors[$property] = $message;
 		}
 	}
-	
-	
-	/**
-	 * Capture and process any submitted request data, then send it to be validated and saved
-	 * @param array The form input just submitted
-	 * @since 0.1
-	 */
-	public function process_request($input)
-	{
-		// If the nonce checks out, validate and save any submitted data
-		if ( check_admin_referer( $this->_name . '-options' ) ) {
-			
-			// get the options from $_POST
-			$this->_input = stripslashes_deep($_POST[$this->_name]);
-			
-			// save the options
-			$this->save($this->_input);
-		}
-	}
-	
 
-	
+
 	/**
 	 * Validates the option against the validation rules returned by $this->rules()
 	 * @param array $option of option to be validated.

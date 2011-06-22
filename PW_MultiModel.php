@@ -46,46 +46,6 @@ class PW_MultiModel extends PW_Model
 	public function __construct()
 	{				
 		$this->get_option();
-
-		// Set $this->_instance, the default is 0 which is the new instance form
-		$this->_instance = isset($_GET['_instance']) ? (int) $_GET['_instance'] : 0;
-		
-		// if $this->_instance 
-		if ( empty($this->_option[$this->_instance]) ) {
-			wp_die( "Oops, this page doesn't exist.", "Page does not exist", array('response' => 403) );
-		}
-		
-		// Check to see if the 'Delete' link was clicked
-		if ( 
-			isset($_GET['delete_instance'])
-			&& isset($_GET['_instance'])
-			&& check_admin_referer('delete_instance')
-		) {
-			PW_Alerts::add('updated', '<p><strong>' . $this->singular_title . ' Instance Deleted</strong></p>' );				
-			
-			unset( $this->_option[ (int) $_GET['_instance'] ] );
-			update_option( $this->_name, $this->_option );
-			
-			// redirect the page and remove _instance' and 'delete_instance' from the URL
-			wp_redirect( remove_query_arg( array( '_instance', 'delete_instance'), wp_get_referer() ) );
-			exit();
-		}
-
-		
-		// If the POST data is set and the nonce checks out, validate and save any submitted data
-		if ( isset($_POST[$this->_name]) && isset($_POST['_instance']) && check_admin_referer( $this->_name . '-options' ) ) {
-			
-			// get the options from $_POST
-			$this->_input = stripslashes_deep($_POST[$this->_name]);
-			
-			// save the options
-			if ( $this->save($this->_input, $_POST['_instance']) ) {
-				if ( $_POST['_instance'] == 0 ) {
-					wp_redirect( add_query_arg( '_instance', $this->_option['auto_id'] - 1, wp_get_referer() ) );				
-					exit();
-				}
-			}
-		}
 	}
 	
 	
@@ -103,26 +63,7 @@ class PW_MultiModel extends PW_Model
 		}
 		return parent::__get($name);
 	}
-	
-	
-	/**
-	 * Capture and process any submitted request data, then send it to be validated and saved
-	 * @param array The form input just submitted
-	 * @since 0.1
-	 */
-	public function process_request($input)
-	{
-		// If the nonce checks out, validate and save any submitted data
-		if ( check_admin_referer( $this->_name . '-options' ) ) {
-			
-			// get the options from $_POST
-			$this->_input = stripslashes_deep($_POST[$this->_name]);
-			
-			// save the options
-			$this->save($this->_input);
-		}
-	}
-	
+
 	
 	/**
 	 * Save the option to the database if (and only if) the option passes validation
@@ -206,7 +147,7 @@ class PW_MultiModel extends PW_Model
 	 */
 	protected function readonly()
 	{ 
-		return array_merge( parent::readonly(), array('instance', 'singular_title') );
+		return array_merge( parent::readonly(), array('singular_title') );
 	}
 	
 	

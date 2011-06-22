@@ -52,9 +52,9 @@ div.error ul { margin: 0 0 1em 2em; }
 div.error li { font-size:11px; list-style:square; line-height:1em; }
 
 /* form aside */
-.pw-form-aside { background-color:#FBFBFB;border:1px solid #CCCCCC; margin-top:14px; padding:14px 20px 0; -moz-border-radius:5px; -webkit-border-radius:5px; border-radius:5px; }
-.pw-form-aside h3 { border:none!important; margin:0!important; }
-.pw-form-aside p { margin:.5em 0 1em!important; }
+.pw-form-footer { background-color:#FBFBFB;border:1px solid #CCCCCC; margin-top:20px; padding:14px 20px 0; -moz-border-radius:5px; -webkit-border-radius:5px; border-radius:5px; }
+.pw-form-footer h3 { border:none!important; margin:0!important; }
+.pw-form-footer p { margin:.5em 0 1em!important; }
 
 
 /* multi-model */

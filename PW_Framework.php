@@ -21,11 +21,13 @@ class PW_Framework
 		'PW_Validator' => 'PW_Validator.php',
 		'PW_HTML' => 'PW_HTML.php',
 		'PW_Model' => 'PW_Model.php',
-		'PW_Multi_Model' => 'PW_Multi_Model.php',
+		'PW_MultiModel' => 'PW_MultiModel.php',
 		'PW_Form' => 'PW_Form.php',
-		'PW_Multi_Model_Form' => 'PW_Multi_Model_Form.php',
+		'PW_MultiModelForm' => 'PW_MultiModelForm.php',
 		'PW_Controller' => 'PW_Controller.php',
-		'ZC' => 'PW_Zen_Coder.php',		
+		'PW_ModelController' => 'PW_ModelController.php',
+		'PW_MultiModelController' => 'PW_MultiModelController.php',
+		'ZC' => 'PW_ZenCoder.php',		
 	);
 	
 	/**

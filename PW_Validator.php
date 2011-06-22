@@ -57,7 +57,7 @@ class PW_Validator
 		
 		
 		if ( $pattern && !preg_match($pattern, $input) ) {
-			return $input . 'Invalid value for {property}';
+			return 'Invalid value for {property}';
 		}
 	}
 	

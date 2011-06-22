@@ -1,8 +1,8 @@
 <?php
 /**
- * PW_Multi_Model
+ * PW_MultiModel
  *
- * A PW_Multi_Model stores an option that is an array of model objects
+ * A PW_MultiModel stores an option that is an array of model objects
  *
  * The basic structure of the option is as follows:
  *  array(
@@ -23,7 +23,7 @@
  * @since 0.1
  */
 
-class PW_Multi_Model extends PW_Model
+class PW_MultiModel extends PW_Model
 {	
 	/**
 	 * @var int The model instance (the option array key) currently being used
@@ -102,6 +102,25 @@ class PW_Multi_Model extends PW_Model
 			return $this->_singular_title ? $this->_singular_title : $this->_title;
 		}
 		return parent::__get($name);
+	}
+	
+	
+	/**
+	 * Capture and process any submitted request data, then send it to be validated and saved
+	 * @param array The form input just submitted
+	 * @since 0.1
+	 */
+	public function process_request($input)
+	{
+		// If the nonce checks out, validate and save any submitted data
+		if ( check_admin_referer( $this->_name . '-options' ) ) {
+			
+			// get the options from $_POST
+			$this->_input = stripslashes_deep($_POST[$this->_name]);
+			
+			// save the options
+			$this->save($this->_input);
+		}
 	}
 	
 	

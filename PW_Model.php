@@ -97,14 +97,9 @@ class PW_Model extends PW_Object
 	{
 		$this->get_option();
 		
-		// If the POST data is set and the nonce checks out, validate and save any submitted data
-		if ( isset($_POST[$this->_name]) && check_admin_referer( $this->_name . '-options' ) ) {
-			
-			// get the options from $_POST
-			$this->_input = stripslashes_deep($_POST[$this->_name]);
-			
-			// save the options
-			$this->save($this->_input);
+		// If POST data for this model was submitted, process it
+		if ( isset($_POST[$this->_name])  ) {
+			$this->process_input($_POST[$this->_name]);
 		}
 	}
 	
@@ -138,6 +133,26 @@ class PW_Model extends PW_Object
 			$this->_errors[$property] = $message;
 		}
 	}
+	
+	
+	/**
+	 * Capture and process any submitted request data, then send it to be validated and saved
+	 * @param array The form input just submitted
+	 * @since 0.1
+	 */
+	public function process_request($input)
+	{
+		// If the nonce checks out, validate and save any submitted data
+		if ( check_admin_referer( $this->_name . '-options' ) ) {
+			
+			// get the options from $_POST
+			$this->_input = stripslashes_deep($_POST[$this->_name]);
+			
+			// save the options
+			$this->save($this->_input);
+		}
+	}
+	
 
 	
 	/**
@@ -170,7 +185,7 @@ class PW_Model extends PW_Object
 				// this will allow for an error in a situation where someone used firebug to delete HTML dynamically
 				$field = isset($input[$property]) ? $input[$property] : null;
 				
-				// if $validate_on_empty is set to false, allow for empty properties
+				// if $validate_all is set to false, allow for empty properties
 				if ( !$validate_all && $field === null ) {
 					continue;
 				}

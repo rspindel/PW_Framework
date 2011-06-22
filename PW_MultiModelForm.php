@@ -1,8 +1,8 @@
 <?php
 /**
- * PW_Multi_Model_Form
+ * PW_MultiModelForm
  *
- * A helper class to build a form based on a PW_Multi_Model object
+ * A helper class to build a form based on a PW_MultiModel object
  *
  * This class primarily does these things:
  * 1) Renders the markup of the form fields
@@ -12,7 +12,7 @@
  * @since 0.1
  */
 
-class PW_Multi_Model_Form extends PW_Form
+class PW_MultiModelForm extends PW_Form
 {
 
 	/**

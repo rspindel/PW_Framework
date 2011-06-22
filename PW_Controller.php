@@ -193,8 +193,8 @@ class PW_Controller extends PW_Object
 	 * Renders a view file.
 	 * This method includes the view file as a PHP script
 	 * and captures the display result if required.
-	 * @param string $file The view file (defaults to this controller's view)
 	 * @param array $vars An array variables to extract and pass to the view file
+	 * @param string $file The view file (defaults to this controller's view)
 	 * @param boolean $output Set as false to return as a string
 	 * @since 0.1
 	 */

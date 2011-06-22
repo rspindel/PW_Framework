@@ -94,9 +94,7 @@ class PW_Form extends PW_Object
 	public function begin_form( $atts = array() )
 	{
 		$this->render_title();
-				
-		// PW_Alerts::render();
-		
+
 		$output = '';
 				
 		// Add only the opening form tag

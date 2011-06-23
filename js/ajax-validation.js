@@ -1,18 +1,16 @@
-jQuery(document).ready(function($)
-{
+jQuery(document).ready( function($) {
 	var model = $("form.pw-form").attr('id');
-	
 	$("form.pw-form input[type=text], form.pw-form input[type=password], form.pw-form textarea").blur( function() {
-
 		var field = $(this);
 		$.ajax({
-			type: 'GET',
-			url: ajaxurl,
-			data: 'action=' + model + '_form_validate&' + field.serialize(),
-			success: function(response) {				
+			type:'GET',
+			url:ajaxurl,
+			data:'action=' + model + '_form_validate&' + field.serialize(),
+			success:function(response) {
+				var parent, errorWrapper;
 				if (response) {
 					parent = field.parent().addClass('pw-error');
-					errorWrapper = parent.children('.pw-error-message')
+					errorWrapper = parent.children('.pw-error-message');
 					if ( errorWrapper.size() > 0 ) {
 						errorWrapper.html(response);
 					} else {
@@ -23,5 +21,5 @@ jQuery(document).ready(function($)
 				}
 			}
 		});
-	})
+	});
 });

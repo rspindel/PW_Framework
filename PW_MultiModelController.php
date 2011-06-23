@@ -32,10 +32,12 @@ class PW_MultiModelController extends PW_ModelController
 			&& check_admin_referer('delete_instance')
 		) {
 			PW_Alerts::add('updated', '<p><strong>' . $this->_model->singular_title . ' Instance Deleted</strong></p>' );				
-			
-			unset( $this->_model->option[ (int) $_GET['_instance'] ] );
-			update_option( $this->_model->name, $this->_model->option );
-			
+
+			// make a copy of the option, then unsetting the index and update with the copy
+			$option = $this->_model->option;		
+			unset( $option[ (int) $_GET['_instance'] ] );
+			update_option( $this->_model->name, $option );
+
 			// redirect the page and remove _instance' and 'delete_instance' from the URL
 			wp_redirect( remove_query_arg( array( '_instance', 'delete_instance'), wp_get_referer() ) );
 			exit();

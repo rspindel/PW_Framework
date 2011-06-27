@@ -16,10 +16,23 @@
 class PW_Controller extends PW_Object
 {	
 	/**
-	 * @var string The file path of this plugin's main script
+	* The file path of this plugin's main script
+	* Don't attempt to set this from one of the framework class files since there's no
+	* telling what plugin's framework files will be used. 
+	* @var string 
 	 * @since 0.1
 	 */
 	protected $_plugin_file;
+	
+	
+	/**
+	* The file path of this plugin's main directory
+	* Don't attempt to set this from one of the framework class files since there's no
+	* telling what plugin's framework files will be used. 
+	* @var string
+	 * @since 0.1
+	 */
+	protected $_plugin_dir;
 
 
 	/**

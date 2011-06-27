@@ -35,7 +35,7 @@ class PW_ModelController extends PW_Controller
 		add_action( 'admin_menu', array($this, 'add_settings_page') );
 		
 		// Add a filter that adds a "settings" link when viewing this plugin in the plugins list
-		add_filter( 'plugin_action_links_' . plugin_basename($this->_plugin_file) , array($this, 'add_settings_link' ) );
+		add_filter( 'plugin_action_links_' . $this->_plugin_file , array($this, 'add_settings_link' ) );
 		
 		// If a model object was passed, set it and call the process_request method which handles CRUD functionality
 		if ($model) {

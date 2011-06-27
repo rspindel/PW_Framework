@@ -16,7 +16,7 @@
 class PW_Controller extends PW_Object
 {	
 	/**
-	* The file path of this plugin's main script
+	* The file path of this plugin's main script, relative to WP_PLUGIN_DIR
 	* Don't attempt to set this from one of the framework class files since there's no
 	* telling what plugin's framework files will be used. 
 	* @var string 
@@ -26,7 +26,7 @@ class PW_Controller extends PW_Object
 	
 	
 	/**
-	* The file path of this plugin's main directory
+	* The file path of this plugin's main directory, relative to WP_PLUGIN_DIR
 	* Don't attempt to set this from one of the framework class files since there's no
 	* telling what plugin's framework files will be used. 
 	* @var string

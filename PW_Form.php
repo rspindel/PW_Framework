@@ -22,18 +22,30 @@ class PW_Form extends PW_Object
 	
 	/**
 	 * @var string The template to create the HTML label/field pairs
-	 * Don't worry about creating extra markup if {extra} or {error} is empty.
-	 * All empty tags are removed before output.
 	 * @since 0.1
 	 */
 	protected $_template = '
 		<div class="label">{label}</div>
-		<div class="field {error_class}">
-			{field}
-			<span class="description">{desc}</span>
-			<div class="extra">{extra}</div>
-			<div class="{error_message_class}">{error}</div>
-		</div>
+		<div class="field {error_class}">{field}{desc}{extra}{error}</div>
+	';
+	
+	/**
+	 * @var string The template for the description
+	 * @since 0.1
+	 */
+	protected $_description_template = '<span class="description">{content}</span>';
+	
+	/**
+	 * @var string The template for the extra (any additional markup passed)
+	 * @since 0.1
+	 */
+	protected $_extra_template = '<div class="extra">{content}</div>';
+	
+	/**
+	 * @var string The template for the extra (any additional markup passed)
+	 * @since 0.1
+	 */
+	protected $_error_template = '<div class="{error_message_class}">{content}</div>
 	';
 
 	/**
@@ -183,14 +195,15 @@ class PW_Form extends PW_Object
 	 */
 	public function render_field($label, $field, $desc, $extra, $error)
 	{	
+		$desc = $desc ? str_replace('{content}', $desc, $this->_description_template) : '';
+		$extra = $extra ? str_replace('{content}', $extra, $this->_extra_template) : '';
+		$error = $error ? str_replace( array('{content}', '{error_message_class}'), array($error, $this->_error_message_class), $this->_error_template ) : '';
+		
 		$output = str_replace(
-			array('{label}','{field}','{desc}','{extra}','{error}','{error_class}','{error_message_class}'),
-			array($label, $field, $desc, $extra, $error, $error ? $this->_error_class : '', $error ? $this->_error_message_class : '' ),
+			array('{label}','{field}','{desc}','{extra}','{error}','{error_class}'),
+			array($label, $field, $desc, $extra, $error, $error ? $this->_error_class : '' ),
 			$this->_template
 		);
-		
-		// then remove any empty tags
-		$output = preg_replace('/<[^>\/]+><\/[^>]+>/', '', $output);
 
 		$this->return_or_echo( $output );
 	}
@@ -273,6 +286,24 @@ class PW_Form extends PW_Object
 	}
 	
 	
+	/**
+	 * @param string $property The model option property
+	 * @param array $atts @see PW_HTML::tag() for details
+	 * @param string $extra Any addition markup you want to display after the input element
+	 * @return string The generated HTML markup
+	 * @since 0.1
+	 */
+	public function textarea( $property, $atts=array(), $extra = '' )
+	{
+		extract( $this->get_field_data_from_model($property) ); // returns $error, $label, $desc, $name, $value, $id
+		
+		$label = PW_HTML::label($label, $id);
+		$field = PW_HTML::textarea( $name, $value, $atts);
+		
+		$this->return_or_echo( $this->render_field($label, $field, $desc, $extra, $error) );
+	}
+	
+
 	/**
 	 * @param string $property The model option property
 	 * @param array $atts @see PW_HTML::tag() for details

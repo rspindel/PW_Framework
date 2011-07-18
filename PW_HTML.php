@@ -232,6 +232,23 @@ class PW_HTML
 	
 	
 	/**
+	 * Creates and returns the output for a textarea
+	 * @param string $name The name attribute
+	 * @param string $text The default text content
+	 * @param array $atts @see self::tag() for details
+	 * @return string The generated HTML markup
+	 * @since 0.1
+	 */
+	public static function textarea( $name = '', $text = '', $atts=array() )
+	{
+		$atts['name'] = $name;
+		$atts['id'] = self::get_id_from_name($name);
+		$atts['rows'] = isset($atts['rows']) ? $atts['rows'] : 4;
+		return self::tag('textarea', $text, $atts);
+	}
+
+
+	/**
 	 * Creates and returns the output for an input element of type="text"
 	 * @param string $name The name attribute
 	 * @param string $text The default text content

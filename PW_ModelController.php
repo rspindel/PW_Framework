@@ -75,7 +75,6 @@ class PW_ModelController extends PW_Controller
 			
 			// save the options
 			$this->_model->save($this->_model->input);
-			
 		}
 	}
 	
